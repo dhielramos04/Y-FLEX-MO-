@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoga Mastery - Challenges & Rewards</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #166534; }
+        
+        .sidebar { 
+            width: 280px; 
+            height: 100vh; 
+            position: fixed; 
+            left: 0; 
+            top: 0; 
+            background-color: #ffffff; 
+            border-right: 1px solid #dcfce7;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content { margin-left: 280px; padding: 40px; min-height: 100vh; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            margin: 4px 16px;
+            border-radius: 12px;
+            color: #4b5563;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover { background-color: #f0fdf4; color: #166534; }
+        .nav-item.active { background-color: #dcfce7; color: #15803d; }
+
+        .challenge-card {
+            background-color: #ffffff;
+            border: 1px solid #dcfce7;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .active-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(22, 101, 52, 0.1);
+        }
+
+        .locked-state { filter: grayscale(1); opacity: 0.6; pointer-events: none; }
+        
+        /* Reward Badge Animation */
+        .badge-unlock { animation: bounce 2s infinite; }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+        /* MOBILE RESPONSIVENESS FIX */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 50;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+    <div class="p-8 flex items-center space-x-3">
+        <img 
+            src="../assets/images/logo.png" 
+            alt="Y-Flex Mo Logo" 
+            class="h-10 w-10 object-contain"
+            onerror="this.onerror=null;this.src='https://placehold.co/40x40/171717/34D399?text=Y';"
+        >
+        
+        <h1 class="text-2xl font-black text-green-800 tracking-tighter">
+            Y-FLEX MO
+        </h1>
+    </div>
+
+        <div class="px-6 mb-6">
+            <div class="bg-green-50 p-4 rounded-2xl border border-green-100">
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-12 h-12 rounded-full bg-green-200 border-2 border-white overflow-hidden shadow-sm">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar">
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-green-900">
+    Welcome, <span id="learnerDisplay">Yoga Learner</span>
+</p>
+                        <p class="text-xs text-green-600 font-medium">Level <span id="user-level">1</span> Practitioner</p>
+                    </div>
+                </div>
+                <div class="w-full bg-green-200 rounded-full h-2 mb-1">
+                    <div id="xp-bar" class="bg-green-600 h-2 rounded-full transition-all duration-500" style="width: 20%"></div>
+                </div>
+                <p class="text-[10px] text-green-700 text-right font-bold"><span id="current-xp">100</span> / 500 YP</p>
+            </div>
+        </div>
+
+        <nav class="flex-grow">
+            <a href="dashboard.html" class="nav-item">
+                <span class="mr-3">🏠</span> Dashboard
+            </a>
+            <a href="challenge_list.html" class="nav-item">
+                <span class="mr-3">📜</span> Challenges
+            </a>
+            <a href="myprogress.html" class="nav-item">
+                <span class="mr-3">📊</span> My Progress
+            </a>
+            <a href="rewards.html" class="nav-item">
+    <span class="mr-3">🏆</span> Rewards
+</a>
+
+        <div class="p-6 border-t border-green-50">
+            <a href="#" class="nav-item text-red-500 hover:bg-red-50">
+                <span class="mr-3">🚪</span> Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <button id="menuToggle"
+        class="md:hidden mb-4 p-2 rounded-lg border border-green-200 text-green-700">
+    ☰ Menu
+</button>
+
+        <div class="flex justify-between items-start mb-12">
+            <header>
+                <h1 class="text-4xl font-black text-green-900 tracking-tight">Yoga Journey</h1>
+                <p class="text-green-700 text-lg mt-2 font-medium">Master your flow and earn rewards.</p>
+            </header>
+            
+            <div class="flex flex-wrap gap-4">
+               <div class="bg-white p-4 rounded-2xl border border-green-200 shadow-sm text-center min-w-[100px]">
+    <p class="text-xs text-gray-500 font-bold uppercase">Points</p>
+    <p id="total-points" class="text-2xl font-black text-green-600">0</p>
+</div>
+                <div class="bg-white p-4 rounded-2xl border border-green-200 shadow-sm text-center min-w-[100px]">
+                    <p class="text-xs text-gray-500 font-bold uppercase">Badges</p>
+                    <p id="badge-count" class="text-2xl font-black text-orange-500">0</p>
+                </div>
+            </div>
+        </div>
+
+        <section class="mb-12 bg-white p-8 rounded-3xl border border-green-200 shadow-sm max-w-4xl">
+            <h2 class="text-xl font-bold text-green-800 mb-4 flex items-center">
+                <span class="mr-2">🎯</span> Web App Objectives
+            </h2>
+            <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start"><span class="text-green-600 font-bold mr-3">1.</span> Define the Philosophical Foundation of Yoga and Its Benefits.</li>
+                <li class="flex items-start"><span class="text-green-600 font-bold mr-3">2.</span> Identify and describe the different poses of Yoga.</li>
+                <li class="flex items-start"><span class="text-green-600 font-bold mr-3">3.</span> Perform yoga exercises.</li>
+            </ul>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div id="challenge-1" class="active-card challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="text-5xl">📜</div>
+                    <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase">+200 YP</span>
+                </div>
+                <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 1: History & Benefits</h2>
+                <p class="text-gray-600 mb-8 flex-grow">Learn the origins and foundations. Reward: <strong>History Buff Badge</strong>.</p>
+                <a href="challenge1_content.html" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-center hover:bg-green-700 transition shadow-lg shadow-green-100">
+                    Start Stage
+                </a>
+            </div>
+
+            <div id="challenge-2" class="locked-state challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="text-5xl">🧘‍♀️</div>
+                    <span class="bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-1 rounded-full uppercase">+300 YP</span>
+                </div>
+                <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 2: Yoga Types</h2>
+                <p class="text-gray-600 mb-8 flex-grow">Identify poses and flows. Reward: <strong>Pose Master Badge</strong>.</p>
+                <button disabled class="w-full bg-gray-200 text-gray-400 py-4 rounded-2xl font-bold cursor-not-allowed">Locked</button>
+            </div>
+
+            <div id="challenge-3" class="locked-state challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="text-5xl">🏆</div>
+                    <span class="bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-1 rounded-full uppercase">+500 YP</span>
+                </div>
+                <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 3: Be A Yoga Master</h2>
+                <p class="text-gray-600 mb-8 flex-grow">Perform exercises daily. Reward: <strong>Zen Warrior Badge</strong>.</p>
+                <button disabled class="w-full bg-gray-200 text-gray-400 py-4 rounded-2xl font-bold cursor-not-allowed">Locked</button>
+            </div>
+
+        </div>
+
+        <section class="mt-16">
+            <h2 class="text-2xl font-black text-green-900 mb-6">Unlocked Rewards</h2>
+            <div id="badges-container" class="flex flex-wrap gap-6">
+                <div class="text-center opacity-30 grayscale">
+                    <div class="w-20 h-20 bg-white rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center text-3xl mb-2">📜</div>
+                    <p class="text-xs font-bold text-gray-400">History Buff</p>
+                </div>
+                <div class="text-center opacity-30 grayscale">
+                    <div class="w-20 h-20 bg-white rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center text-3xl mb-2">🧘‍♀️</div>
+                    <p class="text-xs font-bold text-gray-400">Pose Master</p>
+                </div>
+                <div class="text-center opacity-30 grayscale">
+                    <div class="w-20 h-20 bg-white rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center text-3xl mb-2">🏆</div>
+                    <p class="text-xs font-bold text-gray-400">Zen Warrior</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+  <script>
+   window.onload = function() {
+    // --- 1. Load Learner Name ---
+    const learner = localStorage.getItem("learnerName");
+    if (learner) {
+        document.getElementById("learnerDisplay").textContent = learner;
+    }
+
+    // --- 2. Load Stage Points & Completion ---
+    const stages = [
+        { id: "challenge-1", points: Number(localStorage.getItem('challenge1_points') ?? 0), complete: localStorage.getItem('challenge1_complete') === 'true', score: Number(localStorage.getItem('challenge1_score')) },
+        { id: "challenge-2", points: Number(localStorage.getItem('challenge2_points') ?? 0), complete: localStorage.getItem('challenge2_complete') === 'true', score: Number(localStorage.getItem('challenge2_score')) },
+        { id: "challenge-3", points: Number(localStorage.getItem('challenge3_points') ?? 0), complete: localStorage.getItem('challenge3_complete') === 'true', score: Number(localStorage.getItem('challenge3_score')) }
+    ];
+
+    // --- 3. Compute Total Points ---
+    const totalPoints = stages.reduce((sum, s) => sum + s.points, 0);
+    document.getElementById('total-points').innerText = totalPoints;
+    document.getElementById('current-xp').innerText = totalPoints;
+
+    // --- 4. Update XP Bar ---
+    let xpPercent = Math.min((totalPoints / 1000) * 100, 100);
+    document.getElementById('xp-bar').style.width = xpPercent + "%";
+
+    // --- 5. Determine User Level ---
+    const userLevelText = document.getElementById('user-level');
+    if (totalPoints >= 800) {
+        userLevelText.innerText = "Master";
+    } else if (totalPoints >= 400) {
+        userLevelText.innerText = "Intermediate";
+    } else {
+        userLevelText.innerText = "Beginner";
+    }
+
+    // --- 6. Count Completed Stages for Badges ---
+    let badgeCount = stages.filter(s => s.complete).length;
+    document.getElementById('badge-count').innerText = badgeCount;
+
+    // --- 7. Update Stage Cards & Unlock Progression ---
+    stages.forEach((stage, index) => {
+        const card = document.getElementById(stage.id);
+        if (!card) return;
+
+        const btn = card.querySelector('a, button');
+        if (!btn) return;
+
+        if (stage.complete) {
+            // Stage Completed
+            btn.innerText = "✅ Completed";
+            if (stage.id === "challenge-3") {
+                btn.className = "w-full bg-black text-white py-4 rounded-2xl font-bold hover:bg-green-900 transition";
+            } else {
+                btn.className = "w-full bg-gray-100 text-gray-500 py-4 rounded-2xl font-bold text-center hover:bg-gray-200 transition";
+            }
+
+            // Completed stages go back to dashboard
+            if (btn.tagName === "A") {
+                btn.href = "dashboard.html";
+                btn.onclick = null;
+            } else {
+                btn.onclick = () => window.location.href = "dashboard.html";
+            }
+
+            unlockBadge(index, stage.score);
+
+            // Unlock next stage automatically if exists
+            const nextStage = stages[index + 1];
+            if (nextStage) unlockStage(nextStage.id, `challenge${index + 2}_content.html`);
+        }
+    });
+
+    // --- HELPER FUNCTIONS ---
+    function unlockStage(stageId, destinationFile) {
+        const card = document.getElementById(stageId);
+        if (!card) return;
+
+        card.classList.remove('locked-state');
+        card.classList.add('active-card');
+
+        const btn = card.querySelector('button, a');
+        if (!btn) return;
+
+        btn.removeAttribute('disabled');
+        btn.className = "w-full bg-green-600 text-white py-4 rounded-2xl font-bold hover:bg-green-700 transition shadow-lg cursor-pointer";
+        btn.innerText = "Start Stage";
+        btn.onclick = () => window.location.href = destinationFile;
+
+        if (btn.tagName === "A") btn.href = destinationFile;
+    }
+
+    function unlockBadge(index, score) {
+        const container = document.getElementById('badges-container');
+        if (!container || !container.children[index]) return;
+
+        const badgeBox = container.children[index];
+        const badgeIcon = badgeBox.querySelector('div');
+        const badgeText = badgeBox.querySelector('p');
+
+        badgeBox.classList.remove('opacity-30', 'grayscale');
+        badgeIcon.classList.remove('border-dashed', 'border-gray-300');
+        badgeIcon.classList.add('border-solid', 'shadow-sm', 'badge-unlock');
+
+        if (score >= 5) {
+            badgeIcon.classList.add('border-yellow-400', 'bg-yellow-50');
+            badgeText.classList.replace('text-gray-400', 'text-yellow-700');
+        } else if (score >= 3) {
+            badgeIcon.classList.add('border-green-500', 'bg-green-50');
+            badgeText.classList.replace('text-gray-400', 'text-green-700');
+        } else {
+            badgeIcon.classList.add('border-orange-300', 'bg-orange-50');
+            badgeText.classList.replace('text-gray-400', 'text-orange-600');
+        }
+    }
+};
+</script>
+    
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const currentPage = window.location.pathname.split("/").pop();
+
+    document.querySelectorAll(".nav-item").forEach(link => {
+        const linkPage = link.getAttribute("href");
+
+        if (linkPage === currentPage) {
+            link.classList.add("active");
+        } else {
+            link.classList.remove("active");
+        }
+    });
+});
+</script>
+    <script>
+document.getElementById("menuToggle")?.addEventListener("click", () => {
+    document.querySelector(".sidebar")?.classList.toggle("open");
+});
+</script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

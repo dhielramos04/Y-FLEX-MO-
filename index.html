@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y-FLEX MO | GAMIFIED YOGA INSTRUCTIONS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Custom gradient for buttons using Tailwind's @apply to define a new utility */
+        .cta-gradient {
+            background-image: linear-gradient(90deg, #10b981 0%, #2dd4bf 100%);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Light Mode Colors
+                        'primary-dark': '#0A0A0A', /* Near Black (Main Text) */
+                        'primary-light': '#ffffff', /* White (Main Background) */
+                        'vibrant-green': '#10b981', /* Emerald 500 - Primary Green Accent */
+                        'teal-accent': '#2dd4bf', /* Teal 400 - Secondary Green/Teal Accent */
+                        'highlight-gray': '#d1d5db', /* Gray 300 - Neutral/Subtle Highlight */
+                        'card-bg': '#f9fafb', /* Very light gray for card backgrounds (Gray 50) */
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+  body {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+      url('assets/images/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center 42%;
+    background-attachment: fixed;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      background-attachment: scroll;
+      background-position: center 45%;
+    }
+  }
+</style>
+</head>
+<body
+  class="bg-primary-light text-primary-dark antialiased min-h-screen"
+  
+    <header class="sticky top-0 z-50 bg-white/70 backdrop-blur-md shadow-lg border-b border-primary-dark/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                
+               <a href="index.html" class="text-2xl font-extrabold text-vibrant-green flex items-center space-x-2">
+    <img src="assets/images/logo.png" alt="Y-Flex Mo Logo" class="h-10 w-10 object-contain">
+    <span>Y-FLEX MO</span>
+</a>
+                
+                <nav class="hidden md:flex items-center space-x-8">
+    <a href="pages/aboutpage.html" class="text-primary-dark/70 hover:text-vibrant-green font-medium transition duration-200">About</a>
+    <a href="pages/researcher.html" class="text-primary-dark/70 hover:text-vibrant-green font-medium transition duration-200">Researcher</a>
+</nav>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="pages/signup.html" class="text-primary-dark/70 hover:text-vibrant-green font-medium transition duration-200">Sign In</a>
+
+<a href="pages/signup.html" class="px-6 py-3 text-sm font-semibold rounded-full cta-gradient text-white shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.02]">
+    Start Learning
+</a>
+                </div>
+
+                <button id="menu-button" class="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-accent">
+                    <svg class="w-6 h-6 text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+     <div id="mobile-menu" class="hidden md:hidden bg-primary-light border-t border-primary-dark/10">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="pages/aboutpage.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary-dark/70 hover:bg-primary-dark/10">About</a>
+        
+        <a href="pages/researcher.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary-dark/70 hover:bg-primary-dark/10">Researcher</a>
+
+        <a href="pages/signup.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary-dark/70 hover:bg-primary-dark/10">Sign In</a>
+
+        <a href="pages/signup.html" class="block w-full text-center py-2 rounded-md text-base font-semibold cta-gradient text-white mt-2">
+            Start Learning
+        </a>
+    </div>
+</div>
+    </header>
+
+    <main>
+        <section class="py-16 md:py-24 text-center">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+                    <span class="text-vibrant-green">Flex Your Limits.</span> <br class="hidden sm:inline"> Find Your Flow.
+                </h1>
+                <p class="text-lg md:text-xl text-primary-dark/70 mb-8 max-w-2xl mx-auto">
+                    Y-FLEX MO brings personalized yoga challenges, real-time posture analysis, and gamified progress tracking directly to you, making wellness accessible and rewarding.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="pages/signup.html" class="px-8 py-4 text-lg font-bold rounded-full cta-gradient text-white shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-105">
+    Sign Up or Log In
+</a>
+<a href="pages/researcher.html" class="px-8 py-4 text-lg font-bold rounded-full bg-primary-light border-2 border-vibrant-green text-vibrant-green hover:bg-vibrant-green/10 transition duration-300 transform hover:scale-105">
+    Meet the Researcher
+</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-16 bg-white/60 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center mb-12 text-primary-dark">What does Y-FLEX MO have?</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="p-6 rounded-2xl bg-primary-light shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-vibrant-green">
+                        <span class="text-4xl text-vibrant-green mb-3 block">&#127941;</span> <h3 class="text-xl font-semibold mb-2">Gamified Challenges</h3>
+                        <p class="text-primary-dark/70 text-sm">Earn XP, level up, and unlock exclusive badges. Our structured challenges keep you motivated on your yoga journey.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-primary-light shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-teal-accent">
+                        <span class="text-4xl text-teal-accent mb-3 block">&#128172;</span> <h3 class="text-xl font-semibold mb-2">Guided Instruction</h3>
+                        <p class="text-primary-dark/70 text-sm">Follow step-by-step instructions for every pose, from Mountain Pose to Warrior II, ensuring proper form and safety.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-primary-light shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-vibrant-green">
+                        <span class="text-4xl text-vibrant-green mb-3 block">&#128195;</span> <h3 class="text-xl font-semibold mb-2">Track Your Progress</h3>
+                        <p class="text-primary-dark/70 text-sm">Visualize your growth and track your streaks. See how far you've come from your very first flow.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="author" class="py-16 md:py-20 bg-white/40 backdrop-blur-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="md:flex md:items-center md:space-x-12">
+                    <div class="md:w-1/2 flex justify-center mb-8 md:mb-0">
+                        <div class="relative w-full max-w-xs md:max-w-sm">
+                            <div class="w-full h-80 bg-vibrant-green/10 rounded-3xl shadow-2xl border border-vibrant-green/30 flex items-center justify-center overflow-hidden">
+                                <img 
+    src="assets/images/researcher.png"
+    alt="Portrait of the researcher Dianna L. Ramos"
+    class="w-32 h-32 rounded-full object-cover border-4 border-primary-light"
+/>
+                           </div>
+                            <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-primary-light p-4 rounded-xl shadow-2xl border border-highlight-gray/50 text-center">
+                                <h3 class="text-xl font-bold text-primary-dark">Dianna L. Ramos</h3>
+                                <p class="text-sm text-primary-dark/70">Researcher</p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="md:w-1/2 mt-10 md:mt-0">
+                        <span class="text-sm font-semibold text-teal-accent uppercase tracking-wider">Meet the Researcher</span>
+                        <h2 class="text-4xl font-bold text-primary-dark mt-2 mb-4">Developed for URS Learners</h2>
+                        <p class="text-lg text-primary-dark/70 mb-6">
+                            Y-FLEX MO is a digital learning material created by Dianna L. Ramos, a master's student actively teaching and conducting research at the University of Rizal System - Morong Campus (URS).
+                        </p>
+                        <p class="text-lg text-primary-dark/70 mb-6">
+                            This platform was developed by the researcher as part of the study titled "Gamified Yoga Instructions: An E‑Guide". The project aims to provide an engaging and interactive digital learning material for Physical Education students.
+
+                            As the creator of Y - Flex Mo, the author designed this web‑based gamified e‑guide to help learners enjoy yoga lessons through an accessible, motivating, and technology‑enhanced environment. The material integrates clear instructions, visual demonstrations, and level‑based activities that support student participation and holistic development.
+                        </p>
+                        <a href="#" class="inline-block mt-4 px-6 py-3 text-sm font-semibold rounded-full cta-gradient text-white shadow-lg hover:shadow-xl transition duration-300">
+                            Learn More About the Researcher &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-primary-dark text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+                <h3 class="text-3xl font-bold mb-4 md:mb-0">Ready to start your learning journey?</h3>
+                <a href="#sign-up" class="px-8 py-4 text-lg font-bold rounded-full cta-gradient text-white shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    Start Learning Now
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-8 bg-card-bg border-t border-primary-dark/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-primary-dark/60">
+            &copy; 2025 Y-FLEX MO. Developed for the University of Rizal System. </div>
+           </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu toggle
+            const menuButton = document.getElementById('menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            menuButton.addEventListener('click', () => {
+                const isExpanded = menuButton.getAttribute('aria-expanded') === 'true' || false;
+                menuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu when a link is clicked
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!mobileMenu.classList.contains('hidden')) {
+                         menuButton.setAttribute('aria-expanded', 'false');
+                         mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+

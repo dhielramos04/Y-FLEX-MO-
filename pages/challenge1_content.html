@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stage 1: History, Benefits & Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Updated to Green and White Theme */
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #166534; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.5rem; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .option-btn { transition: all 0.2s; border: 2px solid #dcfce7; background-color: #ffffff; }
+        .option-btn:hover { background-color: #f0fdf4; }
+        .option-btn.selected { border-color: #22c55e; background-color: #f0fdf4; }
+        .correct { border-color: #16a34a !important; background-color: #dcfce7 !important; color: #166534 !important; }
+        .wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+    </style>
+</head>
+<body class="pb-20">
+
+    <nav class="p-6 max-w-5xl mx-auto">
+        <a href="dashboard.html" class="text-green-700 font-bold flex items-center hover:text-green-900 transition">
+    ← Back to Dashboard
+</a>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6">
+        <p class="text-green-600 font-bold mb-2">
+            Learner: <span id="learnerDisplay">Yoga Student</span>
+        </p>
+        
+        <header class="mb-12">
+            <h1 class="text-4xl font-black mb-4 text-green-900">History and Foundations of Yoga</h1>
+            <div class="space-y-6 text-gray-800 leading-relaxed">
+                <p class="p-6 bg-white rounded-2xl shadow-sm border border-green-100">
+                    Yoga is an ancient system of physical and mental practices that originated during the <strong>Indus Valley Civilization</strong> in South Asia. The fundamental purpose of yoga is to promote harmony in the body, mind, and environment.
+                </p>
+                
+                <p class="px-2">
+                    There are many different forms of yoga today, ranging from meditative to light-to-moderate intensity levels. While <strong>Hatha yoga</strong> is meant for the mind and mental concentration, <strong>Power yoga</strong> serves more as a physical exercise. Through these practices, yoga can improve muscle strengthening, flexibility, and balance.
+                </p>
+            </div>
+        </header>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-green-800">Different Types of Yoga</h2>
+            <div class="grid gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-green-50">
+                    <h3 class="font-bold text-green-600 text-xl mb-2">1. Hatha Yoga</h3>
+                    <p class="text-gray-700">This kind of yoga is best for individuals who are new to yoga. Being new to yoga, you would prefer to be more on gentle, unhurried, and meditative forms. It focuses on one pose at a time with rest in between. This typically includes basic yoga poses with deep breathing that focuses on your breath and meditation.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-green-50">
+                    <h3 class="font-bold text-green-600 text-xl mb-2">2. Ashtanga Yoga</h3>
+                    <p class="text-gray-700">It is a structured form of yoga. It involves a continuous structured sequence of posture with the breath. This yoga refers to the "eight limbs" of yoga because it concentrates on moral codes, self-purification, posture, breathing, internal listening, concentration, meditation, and a state of unity.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-green-50">
+                    <h3 class="font-bold text-green-600 text-xl mb-2">3. Vinyasa Yoga</h3>
+                    <p class="text-gray-700">It is also called "flow" or "Vinyasa flow". The postures in this yoga are usually done in a smooth flowing sequence that requires endurance. Each movement in Vinyasa should synchronize with your breath.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-green-800">Benefits of Yoga</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-5 bg-white rounded-xl border border-green-100 shadow-sm">
+                    <strong class="text-green-700 block mb-2">1. Improved Flexibility and Mobility</strong>
+                    <p class="text-sm text-gray-600">Regular practice stretches your muscles and increases the range of motion in your joints, helping to loosen tight areas.</p>
+                </div>
+                <div class="p-5 bg-white rounded-xl border border-green-100 shadow-sm">
+                    <strong class="text-green-700 block mb-2">2. Stress Reduction</strong>
+                    <p class="text-sm text-gray-600">Yoga lowers cortisol levels and activates the parasympathetic nervous system to calm the "fight or flight" response.</p>
+                </div>
+                <div class="p-5 bg-white rounded-xl border border-green-100 shadow-sm">
+                    <strong class="text-green-700 block mb-2">3. Increased Strength</strong>
+                    <p class="text-sm text-gray-600">Supporting your body weight in poses like Plank or Downward Dog builds lean muscle mass and improves core stability.</p>
+                </div>
+                <div class="p-5 bg-white rounded-xl border border-green-100 shadow-sm">
+                    <strong class="text-green-700 block mb-2">4. Better Heart Health</strong>
+                    <p class="text-sm text-gray-600">Consistent practice can help lower blood pressure and improve circulation.</p>
+                </div>
+                <div class="p-5 bg-white rounded-xl border border-green-100 shadow-sm md:col-span-2">
+                    <strong class="text-green-700 block mb-2">5. Enhanced Sleep Quality</strong>
+                    <p class="text-sm text-gray-600">Yoga is a proven natural remedy for insomnia by relaxing the nervous system and quieting the mind.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz-section" class="mt-20">
+            <div class="mb-10 text-center">
+                <span class="bg-green-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase">Validation Quiz</span>
+                <h2 class="text-3xl font-black mt-4 text-green-900">Test Your Knowledge</h2>
+                <p class="text-green-700">Select the correct answers to unlock the completion button.</p>
+            </div>
+
+            <div id="quiz-container" class="space-y-8"></div>
+
+        <div class="bg-green-600 text-white p-6 rounded-2xl mb-6 font-bold shadow-lg">
+    ✨ Stage 1 Completed!
+    <br>
+    Raw Score: <span id="final-score">0</span> / 5
+    <br>
+    Percentage: <span id="percentage-score">0</span>%
+    <br>
+    Points Earned: <span id="weighted-score">0</span> / 20
+</div>
+    <p class="text-green-800 mb-6 font-medium">You've earned the History Buff Badge and +200 YP!</p>
+    <button onclick="finishChallenge()" class="bg-green-700 text-white px-12 py-4 rounded-2xl font-bold text-xl hover:bg-green-800 transition shadow-xl">
+        Complete Challenge 1
+    </button>
+</div>
+        </section>
+    </main>
+
+<script>
+// --- Quiz Data ---
+const quizData = [
+    {
+        question: "What is the fundamental purpose of yoga?",
+        options: [
+            "To build muscle mass only",
+            "To promote harmony of body, mind, and environment",
+            "To serve as a competitive sport",
+            "To replace medical treatment"
+        ],
+        answer: "To promote harmony of body, mind, and environment"
+    },
+    {
+        question: "Which yoga style is most suitable for beginners due to its gentle and slow-paced nature?",
+        options: ["Vinyasa Yoga", "Ashtanga Yoga", "Hatha Yoga", "Power Yoga"],
+        answer: "Hatha Yoga"
+    },
+    {
+        question: "Which type of yoga follows a fixed and structured sequence of postures synchronized with breathing?",
+        options: ["Hatha Yoga", "Vinyasa Yoga", "Ashtanga Yoga", "Restorative Yoga"],
+        answer: "Ashtanga Yoga"
+    },
+    {
+        question: "In Vinyasa Yoga, how should movements be performed?",
+        options: [
+            "Independently from breathing",
+            "In long static holds",
+            "In a flowing sequence synchronized with the breath",
+            "Only while seated"
+        ],
+        answer: "In a flowing sequence synchronized with the breath"
+    },
+    {
+        question: "Which of the following is a documented benefit of regular yoga practice?",
+        options: [
+            "Increased stress hormone levels",
+            "Reduced flexibility",
+            "Improved strength, balance, and mental clarity",
+            "Sleep disruption"
+        ],
+        answer: "Improved strength, balance, and mental clarity"
+    }
+];
+
+let answeredQuestions = new Set();
+let answeredCorrectly = new Set();
+const totalQuestions = quizData.length;
+
+// --- Initialize Quiz ---
+function initQuiz() {
+    const container = document.getElementById("quiz-container");
+    container.innerHTML = "";
+
+    quizData.forEach((q, index) => {
+        const div = document.createElement("div");
+        div.className = "bg-white p-8 rounded-3xl border border-green-100 shadow-sm quiz-item";
+
+        div.innerHTML = `
+            <h3 class="font-bold text-lg mb-6 text-green-900">
+                ${index + 1}. ${q.question}
+            </h3>
+            <div class="grid gap-3">
+                ${q.options.map(opt => `
+                    <button class="option-btn p-4 rounded-xl text-left font-medium text-gray-700"
+                        onclick="checkAnswer(this, ${index}, '${opt.replace(/'/g, "\\'")}')">
+                        ${opt}
+                    </button>
+                `).join("")}
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// --- Check Answer ---
+function checkAnswer(btn, questionIndex, selectedAnswer) {
+    const parent = btn.closest(".quiz-item");
+    const buttons = parent.querySelectorAll(".option-btn");
+
+    // Reset previous selection visuals
+    buttons.forEach(b => b.classList.remove("correct", "wrong"));
+
+    // Track answered questions
+    answeredQuestions.add(questionIndex);
+
+    if (selectedAnswer === quizData[questionIndex].answer) {
+        btn.classList.add("correct");
+        answeredCorrectly.add(questionIndex);
+    } else {
+        btn.classList.add("wrong");
+        answeredCorrectly.delete(questionIndex);
+
+        // Show correct answer
+        buttons.forEach(b => {
+            if (b.textContent.trim() === quizData[questionIndex].answer) {
+                b.classList.add("correct");
+            }
+        });
+    }
+
+    // Update final scores only after all questions attempted
+    if (answeredQuestions.size === totalQuestions) {
+        const rawScore = answeredCorrectly.size;
+        const stageWeight = 20; // Stage 1 weight toward total 100
+        const percentage = (rawScore / totalQuestions) * 100;
+        const weightedScore = (rawScore / totalQuestions) * stageWeight;
+
+        document.getElementById("final-score").textContent = rawScore;
+        document.getElementById("percentage-score").textContent = percentage.toFixed(0);
+        document.getElementById("weighted-score").textContent = weightedScore.toFixed(2);
+
+        // Save to localStorage for dashboard
+        localStorage.setItem("challenge1_complete", "true");
+        localStorage.setItem("challenge1_score", rawScore);
+        localStorage.setItem("challenge1_points", weightedScore);
+    }
+}
+
+// --- Finish Challenge ---
+function finishChallenge() {
+    // Ensure all questions are answered
+    if (answeredQuestions.size < totalQuestions) {
+        alert("Please answer all quiz questions before completing the stage.");
+        return;
+    }
+
+    // Mark stage complete and redirect
+    localStorage.setItem("challenge1_complete", "true");
+    window.location.href = "dashboard.html";
+}
+
+// --- On Page Load ---
+window.onload = () => {
+    initQuiz();
+    const learner = localStorage.getItem("learnerName");
+    if (learner) {
+        document.getElementById("learnerDisplay").textContent = learner;
+    }
+};
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

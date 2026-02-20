@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Y-FLEX MO | Learner Entry</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Font -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            greenMain: '#10b981',
+            greenAccent: '#2dd4bf'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+
+  <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-greenMain flex items-center justify-center gap-2">
+        🌿 Y-FLEX MO
+      </h1>
+      <p class="text-sm text-gray-500 mt-2">
+        Web-Based Gamified Yoga Learning Module
+      </p>
+    </div>
+
+    <!-- Message -->
+    <p id="message" class="hidden mb-4 p-3 rounded text-sm"></p>
+
+    <!-- Sign Up Form -->
+    <form id="signUpForm" class="space-y-4">
+
+      <!-- Name -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Learner Name</label>
+        <input
+          type="text"
+          id="learnerName"
+          placeholder="Enter your name"
+          required
+          class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-greenMain"
+        />
+      </div>
+
+      <!-- Terms -->
+      <div class="flex items-start gap-2">
+        <input type="checkbox" id="terms" class="mt-1" />
+        <label for="terms" class="text-sm text-gray-600">
+          I agree to participate in this instructional module for educational purposes only.
+        </label>
+      </div>
+
+      <!-- Button -->
+      <button
+        type="submit"
+        class="w-full py-3 bg-gradient-to-r from-greenMain to-greenAccent text-white font-semibold rounded hover:opacity-90 transition"
+      >
+        Start Learning
+      </button>
+
+    </form>
+
+    <!-- Footer -->
+    <p class="text-xs text-center text-gray-400 mt-6">
+      No account is created. No data is stored online.
+    </p>
+
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    const form = document.getElementById("signUpForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("learnerName").value.trim();
+      const termsAccepted = document.getElementById("terms").checked;
+
+      if (!name) {
+        showMessage("Please enter your name.", true);
+        return;
+      }
+
+      if (!termsAccepted) {
+        showMessage("You must agree to the terms to proceed.", true);
+        return;
+      }
+
+      // Store learner name locally
+      localStorage.setItem("learnerName", name);
+
+      // Redirect
+      window.location.href = "dashboard.html";
+    });
+
+    function showMessage(text, isError) {
+      message.textContent = text;
+      message.className = "mb-4 p-3 rounded text-sm";
+      message.classList.add(isError ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700");
+    }
+  </script>
+
+</body>
+</html>

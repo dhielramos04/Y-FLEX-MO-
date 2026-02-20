@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Y-Flex Mo</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use Inter font and define custom colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Theme Colors: Black, Green, White
+                        'primary-dark': '#171717', // Neutral-900 (Black/Deep Gray)
+                        'accent-green': '#34D399',  // Emerald-400 (Vibrant Green)
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Setting Inter font as fallback */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900">
+
+    <div class="min-h-screen flex flex-col items-center">
+
+        <!-- Header/Hero Section - Dark Background -->
+        <header class="w-full bg-primary-dark text-white py-16 shadow-lg">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
+                    About <span class="text-accent-green">Y-Flex Mo</span>
+                </h1>
+                <p class="text-xl sm:text-2xl font-light opacity-80">
+                    Your Gamified Yoga and Wellness E-Guide.
+                </p>
+            </div>
+        </header>
+
+        <!-- Main Content Wrapper -->
+        <main class="w-full max-w-4xl mx-auto p-6 md:p-10 -mt-8">
+
+            <!-- Project Context and Overview Card -->
+            <section class="bg-white p-8 sm:p-10 rounded-xl shadow-2xl mb-12 border-t-4 border-accent-green">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+                    <!-- Icon: Research/Guide -->
+                    <svg class="w-8 h-8 mr-3 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.463 9.24 5.378 7.6 5.378 4.652 5.378 2 7.735 2 10.828c0 2.254 1.2 4.19 3 5.385V7.735h4.6a2 2 0 002-2v.518zm0 0c1.168-.783 2.76-.868 4.4-.868 2.948 0 5.6 2.357 5.6 5.45s-2.652 5.45-5.6 5.45c-1.64 0-3.232-.085-4.4-.868v-4.577z"></path></svg>
+                    What is Y-Flex Mo?
+                </h2>
+                <div class="text-lg leading-relaxed text-gray-600 space-y-4">
+                    <p>
+                        Y-Flex Mo is a gamified web-based learning platform developed as part of the research titled "Gamified Yoga Instructions: An E‑Guide". This digital material is specifically designed to support Physical Education learners by providing an engaging, interactive, and accessible way to explore yoga poses and essential wellness activities.
+                    </p>
+                    <p>
+                        The e‑guide serves as an innovative learning tool that enhances student motivation and encourages active participation in PE lessons. By integrating technology into physical education, Y-Flex Mo makes the subject more enjoyable and meaningful for learners, enriching both the teaching and learning experience.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Core Benefits Grid (Based on User's description) -->
+            <section class="mb-12">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Key Features & Benefits</h2>
+
+                <div class="grid md:grid-cols-3 gap-6">
+
+                    <!-- Benefit 1: Gamified Motivation -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-[1.02]">
+                        <div class="text-accent-green mb-3">
+                            <!-- Icon: Star/Achievement -->
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.324 1.144l1.519 4.674c.3.921-.755 1.688-1.539 1.119l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.784.569-1.839-.198-1.539-1.119l1.519-4.674a1 1 0 00-.324-1.144l-3.976-2.888c-.783-.57-.381-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-primary-dark mb-2">Gamified Motivation</h3>
+                        <p class="text-gray-600 text-sm">Enhances student motivation and encourages active participation in PE lessons by leveraging engaging gamification elements and interactive challenges.</p>
+                    </div>
+
+                    <!-- Benefit 2: Interactive E-Guide -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-[1.02]">
+                        <div class="text-accent-green mb-3">
+                            <!-- Icon: Open Book/Guide -->
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.463 9.24 5.378 7.6 5.378 4.652 5.378 2 7.735 2 10.828c0 2.254 1.2 4.19 3 5.385V7.735h4.6a2 2 0 002-2v.518zm0 0c1.168-.783 2.76-.868 4.4-.868 2.948 0 5.6 2.357 5.6 5.45s-2.652 5.45-5.6 5.45c-1.64 0-3.232-.085-4.4-.868v-4.577z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-primary-dark mb-2">Visual & Interactive</h3>
+                        <p class="text-gray-600 text-sm">Provides clear visual guides and user-friendly navigation, ensuring that the yoga lesson content is accessible and easy for all learners to follow.</p>
+                    </div>
+
+                    <!-- Benefit 3: Skill & Wellness Focus -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-[1.02]">
+                        <div class="text-accent-green mb-3">
+                            <!-- Icon: Heart/Wellness -->
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-primary-dark mb-2">Flexibility & Awareness</h3>
+                        <p class="text-gray-600 text-sm">Aims to develop essential movement skills, improve physical flexibility, and cultivate body awareness, making PE lessons more meaningful.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logo Symbolism Section -->
+        <section class="bg-primary-dark text-white p-8 rounded-xl shadow-2xl mb-12">
+    <h2 class="text-2xl font-bold mb-4 flex items-center text-accent-green">
+        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9h-3M12 21a9 9 0 01-9-9m9 9v-3M12 3v3m0 0a9 9 0 00-9 9"></path></svg>
+        The Symbolism Behind the Y-Flex Mo Logo
+    </h2>
+
+    <div class="flex justify-center mb-8">
+        <img 
+            src="../assets/images/logo.png" 
+            alt="Y-Flex Mo Logo" 
+            class="w-48 h-48 rounded-full border-4 border-accent-green p-2 bg-white object-contain shadow-xl"
+            onerror="this.onerror=null;this.src='https://placehold.co/200x200/FFFFFF/34D399?text=Logo';"
+        >
+    </div>
+    <p class="leading-relaxed mb-4">
+        Our logo is a visual representation of the journey we promote: grounding, growth, and flexibility...
+    </p>
+</section>
+                    <p class="leading-relaxed mb-4">
+                        Our logo is a visual representation of the journey we promote: grounding, growth, and flexibility. It beautifully integrates the principles of yoga and wellness:
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 ml-4">
+                        <li>The Figure in Tree Pose: Represents balance, stability, and the cultivation of inner peace—core tenets of physical education and yoga.</li>
+                        <li> Roots: Anchor the figure, symbolizing the importance of strong foundational skills and being grounded in practice.</li>
+                        <li> Lotus Flower:The blooming flower surrounding the figure signifies purity, spiritual awakening, and the potential for growth achieved through persistent practice.</li>
+                        <li> The Green Palette: Reflects wellness, nature, and vitality, reinforcing the health-focused nature of the e-guide.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Activity Modules Section (Replaced Contact Section) -->
+            <section class="bg-white p-8 rounded-xl shadow-2xl border-l-4 border-accent-green">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 flex items-center">
+                    <!-- Icon: Activity/Checklist -->
+                    <svg class="w-6 h-6 mr-3 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-9 0V3h4v2m-4 0h4"></path></svg>
+                    Activities and Challenges in the E-Guide
+                </h2>
+                <p class="text-lg text-gray-600 mb-6">
+                    Y-Flex Mo is structured into clear modules to guide PE learners through their yoga journey:
+                </p>
+
+                <ol class="list-decimal list-inside space-y-4 text-lg text-gray-700 font-semibold">
+                    <li class="pl-2">
+                        Introduction to Yoga and its Benefits (History)
+                    </li>
+                    <li class="pl-2">
+                        Yoga Exercises
+                        <ul class="list-disc list-inside ml-8 text-base font-normal text-gray-600 space-y-1 mt-1">
+                            <li>Mountain Pose</li>
+                            <li>Downward Facing Dog</li>
+                            <li>Tree Pose</li>
+                            <li>Warrior I</li>
+                            <li>Warrior II</li>
+                        </ul>
+                    </li>
+                    <li class="pl-2">
+                        Perform Yoga Exercises (Interactive practice challenges)
+                    </li>
+                </ol>
+            </section>
+
+        </main>
+
+        <!-- Footer - Dark Background -->
+        <footer class="w-full bg-primary-dark text-gray-300 mt-12 py-6">
+            <div class="max-w-4xl mx-auto px-6 text-center text-sm">
+                &copy; 2025 Y-Flex Mo. All rights reserved. | Built with Flexibility.
+            </div>
+        </footer>
+    </div>
+
+</body>
+
+</html>
+

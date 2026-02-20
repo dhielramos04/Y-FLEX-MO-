@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 2: Mastering Yoga Asanas</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4;
+            color: #064e3b;
+        }
+
+        .pose-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            border: 1px solid #bbf7d0;
+            transition: transform 0.3s ease;
+        }
+
+        .pose-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #022c22;
+    border-radius: 1.5rem 1.5rem 0 0;
+    overflow: hidden; /* ← THIS is what you were missing */
+}
+
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+        .option-btn {
+            border: 2px solid #bbf7d0;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
+            background-color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #dcfce7;
+        }
+
+        .correct {
+            border-color: #16a34a !important;
+            background-color: #bbf7d0 !important;
+        }
+
+        .incorrect {
+            border-color: #dc2626 !important;
+            background-color: #fee2e2 !important;
+        }
+    </style>
+</head>
+
+<body class="pb-20">
+
+<nav class="p-6 max-w-5xl mx-auto">
+    <a href="dashboard.html" class="font-bold text-green-700 hover:text-green-900">
+        ← Back to Dashboard
+    </a>
+</nav>
+
+<main class="max-w-4xl mx-auto px-6">
+
+<header class="mb-12">
+    <span class="bg-green-200 text-green-900 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">
+        Active Challenge
+    </span>
+    <h1 class="text-4xl font-black mt-4 mb-4">Mastering Yoga Asanas</h1>
+    <p class="text-lg text-green-800">
+        This challenge introduces essential yoga poses, emphasizing correct definitions, alignment, balance, and safety.
+    </p>
+</header>
+
+<section class="space-y-12 mb-20">
+
+<!-- FOUNDATIONAL POSES -->
+<div>
+    <h2 class="text-2xl font-bold mb-6 text-green-700">Foundational Yoga Poses</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Mountain Pose -->
+        <div class="pose-card shadow-sm">
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="../assets/videos/mountain_pose.mp4" type="video/mp4"> type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-lg mb-2">Mountain Pose (Tadasana)</h3>
+                <p class="text-sm mb-2"><strong>Definition:</strong> Mountain Pose is a foundational standing posture that promotes proper posture, body awareness, and stability by aligning the head, spine, and pelvis.</p>
+                <p class="text-sm mb-2"><strong>Purpose:</strong> Improves posture and balance.</p>
+                <p class="text-sm mb-2"><strong>Flexibility:</strong> Lengthens the spine and opens the chest.</p>
+                <p class="text-sm"><strong>Alignment:</strong> Weight evenly distributed, thighs engaged, shoulders relaxed.</p>
+            </div>
+        </div>
+
+        <!-- Tree Pose -->
+        <div class="pose-card shadow-sm">
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="../assets/videos/tree_pose.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-lg mb-2">Tree Pose (Vrksasana)</h3>
+                <p class="text-sm mb-2"><strong>Definition:</strong> Tree Pose is a single-leg balance posture that enhances concentration, stability, and lower-body strength by requiring controlled balance on one foot.</p>
+                <p class="text-sm mb-2"><strong>Purpose:</strong> Enhances balance and focus.</p>
+                <p class="text-sm mb-2"><strong>Flexibility:</strong> Opens hips and inner thighs.</p>
+                <p class="text-sm"><strong>Alignment:</strong> Foot placed above or below the knee, core engaged.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- DYNAMIC & WARRIOR POSES -->
+<div>
+    <h2 class="text-2xl font-bold mb-6 text-green-700">Dynamic and Warrior Poses</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Downward Facing Dog -->
+        <div class="pose-card shadow-sm">
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="../assets/videos/downward_pose.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-lg mb-2">Downward-Facing Dog (Adho Mukha Svanasana)</h3>
+                <p class="text-sm mb-2"><strong>Definition:</strong> Downward-Facing Dog is an inverted posture that strengthens the upper body while stretching the back of the legs and spine.</p>
+                <p class="text-sm mb-2"><strong>Purpose:</strong> Builds strength and flexibility.</p>
+                <p class="text-sm mb-2"><strong>Flexibility:</strong> Hamstrings, calves, shoulders.</p>
+                <p class="text-sm"><strong>Alignment:</strong> Forms an inverted “V” with a long spine.</p>
+            </div>
+        </div>
+
+        <!-- Warrior I -->
+        <div class="pose-card shadow-sm">
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="../assets/videos/warriori_pose.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-lg mb-2">Warrior I (Virabhadrasana I)</h3>
+                <p class="text-sm mb-2"><strong>Definition:</strong> Warrior I is a powerful standing posture that develops lower-body strength, balance, and focus through a forward-facing lunge position.</p>
+                <p class="text-sm mb-2"><strong>Purpose:</strong> Enhances strength and stability.</p>
+                <p class="text-sm mb-2"><strong>Flexibility:</strong> Opens hips and chest.</p>
+                <p class="text-sm"><strong>Alignment:</strong> Hips squared forward, front knee bent.</p>
+            </div>
+        </div>
+
+        <!-- Warrior II -->
+        <div class="pose-card shadow-sm">
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="../assets/videos/warriorii_pose.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-lg mb-2">Warrior II (Virabhadrasana II)</h3>
+                <p class="text-sm mb-2"><strong>Definition:</strong> Warrior II is a lateral standing posture that emphasizes endurance, balance, and sustained muscular engagement of the lower body.</p>
+                <p class="text-sm mb-2"><strong>Purpose:</strong> Improves endurance and balance.</p>
+                <p class="text-sm mb-2"><strong>Flexibility:</strong> Hips and groin.</p>
+                <p class="text-sm"><strong>Alignment:</strong> Arms extended parallel, gaze over front fingers.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</section>
+
+<!-- QUIZ -->
+<section class="bg-green-900 text-white p-10 rounded-3xl shadow-2xl">
+    <div class="text-center mb-10">
+        <h2 class="text-3xl font-black">Pose Validation Quiz</h2>
+        <p class="text-green-200 mt-2">Answer all questions correctly to complete the challenge.</p>
+    </div>
+
+    <div id="quiz-container" class="space-y-8">
+
+        <div class="quiz-item">
+            <p class="font-bold mb-4">1. What is the main purpose of Mountain Pose?</p>
+            <button onclick="check(this, true)" class="option-btn text-green-900">Postural alignment and body awareness</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Cardiovascular endurance</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Upper-body isolation</button>
+        </div>
+
+        <div class="quiz-item">
+            <p class="font-bold mb-4">2. In Tree Pose, where should the lifted foot be placed?</p>
+            <button onclick="check(this, true)" class="option-btn text-green-900">Above or below the knee</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Directly on the knee</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Floating freely</button>
+        </div>
+
+        <div class="quiz-item">
+            <p class="font-bold mb-4">3. Downward-Facing Dog primarily stretches which area?</p>
+            <button onclick="check(this, true)" class="option-btn text-green-900">Hamstrings and shoulders</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Neck muscles only</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Abdominal muscles only</button>
+        </div>
+
+        <div class="quiz-item">
+            <p class="font-bold mb-4">4. Which alignment cue is correct for Warrior I?</p>
+            <button onclick="check(this, true)" class="option-btn text-green-900">Hips squared forward</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Feet parallel</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Back heel lifted</button>
+        </div>
+
+        <div class="quiz-item">
+            <p class="font-bold mb-4">5. In Warrior II, where should the gaze be directed?</p>
+            <button onclick="check(this, true)" class="option-btn text-green-900">Over the front fingertips</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Toward the floor</button>
+            <button onclick="check(this, false)" class="option-btn text-green-900">Behind the body</button>
+        </div>
+
+   <div id="completion-zone" class="mt-12 text-center hidden">
+
+    <!-- SCORE DISPLAY (added above badge section) -->
+    <div class="mb-6 font-bold text-lg">
+        Raw Score: <span id="raw-score">0</span> / 5
+        <br>
+        Points Earned: <span id="weighted-score">0</span> / 30
+    </div>
+
+    <!-- Badge & Completion Button (keep as-is) -->
+    <p class="text-green-800 mb-6 font-medium">
+        You've earned the Yoga Master Badge and XP!
+    </p>
+    <button onclick="completeChallenge()" class="bg-green-500 hover:bg-green-600 px-12 py-4 rounded-2xl font-black text-xl">
+        Complete Challenge 2
+    </button>
+</div>
+</section>
+
+</main>
+
+<script>
+    // Track which questions have been ATTEMPTED
+    let answeredQuestions = new Set();
+    // Track which questions are CORRECT (for scoring/badges)
+    let answeredCorrectly = new Set();
+    
+    const totalQuestions = 5;
+
+    function check(btn, isCorrect) {
+        const parent = btn.parentElement;
+        const buttons = parent.querySelectorAll('.option-btn');
+        
+        // Find the index of this question
+        const questionIndex = Array.from(document.querySelectorAll('.quiz-item')).indexOf(parent);
+
+        // Reset visual state of buttons in this question
+        buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
+
+        // Mark that this question has been attempted
+        answeredQuestions.add(questionIndex);
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            answeredCorrectly.add(questionIndex);
+        } else {
+            btn.classList.add('incorrect');
+            answeredCorrectly.delete(questionIndex);
+            
+            // Show the correct button
+            buttons.forEach(b => {
+                if (b.getAttribute('onclick').includes('true')) {
+                    b.classList.add('correct');
+                }
+            });
+        }
+
+        // SHOW COMPLETION BUTTON:
+        if (answeredQuestions.size === totalQuestions) {
+            const rawScore = answeredCorrectly.size;   // e.g. 4
+            const stageWeight = 30;                   // Stage 2 = 30 max
+            const weightedScore = (rawScore / totalQuestions) * stageWeight;
+
+            document.getElementById('raw-score').textContent = rawScore;
+            document.getElementById('weighted-score').textContent = weightedScore.toFixed(2);
+
+            // Save for dashboard
+            localStorage.setItem('stage2_raw', rawScore);
+            localStorage.setItem('stage2_points', weightedScore);
+
+            document.getElementById('completion-zone').classList.remove('hidden');
+            document.getElementById('completion-zone').scrollIntoView({ behavior: 'smooth' });
+        }
+    } // ← Make sure this closing brace is here!
+
+    // COMPLETE CHALLENGE FUNCTION (now properly global)
+    function completeChallenge() {
+        const finalScore = answeredCorrectly.size;
+        const stageWeight = 30;
+        const rewardPoints = (finalScore / totalQuestions) * stageWeight;
+        
+        // Save to localStorage
+        localStorage.setItem('challenge2_complete', 'true');
+        localStorage.setItem('challenge2_score', finalScore);
+        localStorage.setItem('challenge2_points', rewardPoints);
+        
+        // Rank Feedback
+        let rank = "Bronze (Trainee)";
+        if (finalScore === 5) rank = "Gold (Master)";
+        else if (finalScore >= 3) rank = "Silver (Practitioner)";
+
+        alert(`Challenge 2 Finished!\nYour Score: ${finalScore}/5\nEarned Rank: ${rank}\nXP Points: ${rewardPoints.toFixed(2)}`);
+        
+        // Redirect to dashboard
+        window.location.href = "dashboard.html"; 
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
