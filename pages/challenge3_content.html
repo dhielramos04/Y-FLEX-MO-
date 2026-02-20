@@ -64,7 +64,7 @@ const posePhoto = document.getElementById("posePhoto");
 const pose = new Pose({
   locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`
 });
-pose.setOptions({ modelComplexity: 1, smoothLandmarks: true });
+pose.setOptions({modelComplexity:1, smoothLandmarks:true});
 pose.onResults(results => {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   if(results.poseLandmarks){
@@ -75,21 +75,18 @@ pose.onResults(results => {
   scoreDisplay.innerText = "Score: " + Math.floor(Math.random()*101);
 });
 
-// -------- Start camera and frame loop --------
+// -------- Start camera and loop safely for GitHub Pages --------
 async function startCamera() {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stream = await navigator.mediaDevices.getUserMedia({ video:true });
     video.srcObject = stream;
-  } catch (err) {
-    console.error("Camera error:", err);
-  }
+    video.onloadedmetadata = () => {
+      video.play();
+      function loop(){ pose.send({image: video}); requestAnimationFrame(loop); }
+      loop();
+    };
+  } catch(e){ console.error("Camera error", e); }
 }
-
-video.onloadedmetadata = () => {
-  video.play();
-  function loop(){ pose.send({image: video}); requestAnimationFrame(loop); }
-  loop();
-};
 
 // -------- Start challenge --------
 document.getElementById("startBtn").addEventListener("click", () => {
