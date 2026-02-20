@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI-Powered Yoga Party Challenge</title>
+<title>AI-Powered Yoga Pose Challenge</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- MediaPipe Pose -->
@@ -31,13 +31,13 @@ AI-Powered Yoga Pose Challenge
 <!-- Live Camera Video -->
 <div class="bg-green-50 p-4 rounded-xl text-center border border-green-200">
 <h3 class="font-semibold mb-2 text-green-700">Your Camera</h3>
-<video id="video" autoplay playsinline class="mx-auto rounded-xl shadow-md w-full border border-green-400"></video>
+<video id="video" autoplay playsinline muted width="640" height="480" class="mx-auto rounded-xl shadow-md border border-green-400"></video>
 </div>
 
 <!-- Overlay Canvas -->
 <div class="bg-green-100 p-4 rounded-xl text-center border border-green-200">
 <h3 class="font-semibold mb-2 text-green-700">Pose Detection + Score</h3>
-<canvas id="overlay" class="mx-auto rounded-xl shadow-md w-full border border-green-400"></canvas>
+<canvas id="overlay" width="640" height="480" class="mx-auto rounded-xl shadow-md border border-green-400"></canvas>
 </div>
 
 </div>
@@ -47,28 +47,25 @@ AI-Powered Yoga Pose Challenge
 </div>
 
 <div class="flex justify-center gap-4 flex-wrap mb-6">
-
-<button onclick="startChallenge()" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">
+<button id="startBtn" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">
 Start Pose
 </button>
 
 <button onclick="captureScreenshot()" class="bg-green-500 text-white px-6 py-2 rounded-xl hover:bg-green-600">
 Take Screenshot
 </button>
-
 </div>
 
 </div>
 
 <script>
-
-// -------- REFERENCE POSES (Placeholder, populate with real keypoints) --------
+// -------- REFERENCE POSES (Placeholder) --------
 const referencePoses = [
-{ name:"Mountain Pose", landmarks: [] },
-{ name:"Tree Pose", landmarks: [] },
-{ name:"Downward Dog", landmarks: [] },
-{ name:"Warrior I", landmarks: [] },
-{ name:"Child Pose", landmarks: [] }
+  { name:"Mountain Pose", landmarks: [] },
+  { name:"Tree Pose", landmarks: [] },
+  { name:"Downward Dog", landmarks: [] },
+  { name:"Warrior I", landmarks: [] },
+  { name:"Child Pose", landmarks: [] }
 ];
 
 // -------- GLOBAL STATE --------
@@ -80,9 +77,9 @@ const videoElement = document.getElementById("video");
 const canvasElement = document.getElementById("overlay");
 const ctx = canvasElement.getContext("2d");
 
-const poseDetector = new Pose({locateFile: (file) => {
-  return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`;
-}});
+const poseDetector = new Pose({
+  locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`
+});
 
 poseDetector.setOptions({
   modelComplexity: 1,
@@ -92,23 +89,25 @@ poseDetector.setOptions({
 
 poseDetector.onResults(onPoseResults);
 
-// START CAMERA
-camera = new Camera(videoElement, {
-  onFrame: async () => {
-    await poseDetector.send({image: videoElement});
-  },
-  width: 640, height: 480
-});
-
-// -------- CHALLENGE CONTROLS --------
-function startChallenge() {
+// -------- START CHALLENGE --------
+document.getElementById("startBtn").addEventListener("click", () => {
   const index = Math.floor(Math.random()*referencePoses.length);
   currentReference = referencePoses[index];
   document.getElementById("currentPoseName").innerText = currentReference.name;
-  camera.start();
-}
 
-// -------- POSE DETECTION CALLBACK --------
+  // Start camera after user interaction
+  if (!camera) {
+    camera = new Camera(videoElement, {
+      onFrame: async () => { await poseDetector.send({image: videoElement}); },
+      width: 640,
+      height: 480
+    });
+  }
+
+  camera.start().catch(err => console.error("Camera start error:", err));
+});
+
+// -------- POSE DETECTION --------
 function onPoseResults(results) {
   canvasElement.width = videoElement.videoWidth;
   canvasElement.height = videoElement.videoHeight;
@@ -157,7 +156,6 @@ function captureScreenshot() {
   a.download = "yoga_pose_capture.png";
   a.click();
 }
-
 </script>
 
 </body>
