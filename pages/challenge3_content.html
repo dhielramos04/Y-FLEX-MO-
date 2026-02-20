@@ -8,7 +8,6 @@
 
 <!-- MediaPipe Pose -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.5/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.5/drawing_utils.js"></script>
 </head>
 
@@ -70,48 +69,47 @@ const referencePoses = [
 
 // -------- GLOBAL STATE --------
 let currentReference = null;
-let camera;
+let videoElement = document.getElementById("video");
+let canvasElement = document.getElementById("overlay");
+let ctx = canvasElement.getContext("2d");
 
-// -------- SET UP MEDIA PIPE --------
-const videoElement = document.getElementById("video");
-const canvasElement = document.getElementById("overlay");
-const ctx = canvasElement.getContext("2d");
-
+// -------- MEDIA PIPE SETUP --------
 const poseDetector = new Pose({
   locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`
 });
-
-poseDetector.setOptions({
-  modelComplexity: 1,
-  smoothLandmarks: true,
-  enableSegmentation: false
-});
-
+poseDetector.setOptions({ modelComplexity: 1, smoothLandmarks: true });
 poseDetector.onResults(onPoseResults);
 
-// -------- START CHALLENGE --------
-document.getElementById("startBtn").addEventListener("click", () => {
-  const index = Math.floor(Math.random()*referencePoses.length);
+// -------- START CAMERA & CHALLENGE --------
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    videoElement.srcObject = stream;
+    await videoElement.play();
+    requestAnimationFrame(processFrame);
+  } catch (err) {
+    console.error("Camera error:", err);
+  }
+}
+
+function startChallenge() {
+  const index = Math.floor(Math.random() * referencePoses.length);
   currentReference = referencePoses[index];
   document.getElementById("currentPoseName").innerText = currentReference.name;
+  startCamera();
+}
 
-  // Start camera after user interaction
-  if (!camera) {
-    camera = new Camera(videoElement, {
-      onFrame: async () => { await poseDetector.send({image: videoElement}); },
-      width: 640,
-      height: 480
-    });
-  }
+// -------- FRAME LOOP --------
+async function processFrame() {
+  await poseDetector.send({ image: videoElement });
+  requestAnimationFrame(processFrame);
+}
 
-  camera.start().catch(err => console.error("Camera start error:", err));
-});
-
-// -------- POSE DETECTION --------
+// -------- POSE DETECTION CALLBACK --------
 function onPoseResults(results) {
   canvasElement.width = videoElement.videoWidth;
   canvasElement.height = videoElement.videoHeight;
-  ctx.clearRect(0,0,canvasElement.width, canvasElement.height);
+  ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
   if (results.poseLandmarks) {
     drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, {color:'#006400', lineWidth:2});
@@ -128,17 +126,17 @@ function onPoseResults(results) {
 
 // -------- SIMPLE SCORING FUNCTION --------
 function computePoseScore(studentLandmarks, refLandmarks) {
-  if (!refLandmarks || refLandmarks.length===0) return 0;
+  if (!refLandmarks || refLandmarks.length === 0) return 0;
   let totalDiff = 0;
   const n = Math.min(studentLandmarks.length, refLandmarks.length);
-  for (let i=0;i<n;i++){
+  for (let i=0; i<n; i++){
     totalDiff += Math.abs(studentLandmarks[i].x - refLandmarks[i].x)
                + Math.abs(studentLandmarks[i].y - refLandmarks[i].y);
   }
   return Math.max(0, 100 - (totalDiff*100));
 }
 
-// -------- SCREENSHOT CAPTURE --------
+// -------- SCREENSHOT --------
 function captureScreenshot() {
   const tempCanvas = document.createElement("canvas");
   const w = videoElement.videoWidth;
@@ -156,7 +154,11 @@ function captureScreenshot() {
   a.download = "yoga_pose_capture.png";
   a.click();
 }
-</script>
 
+// -------- BUTTON LISTENER --------
+document.getElementById("startBtn").addEventListener("click", startChallenge);
+
+</script>
 </body>
 </html>
+
