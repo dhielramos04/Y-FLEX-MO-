@@ -9,6 +9,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- MediaPipe Pose -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.5/drawing_utils.js"></script>
 
@@ -101,7 +102,6 @@ async function startCamera() {
     alert("Camera access denied or not supported.");
   }
 }
-}
 
 // -------- Start challenge --------
 document.getElementById("startBtn").addEventListener("click", () => {
@@ -130,5 +130,6 @@ document.getElementById("screenshotBtn").addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
