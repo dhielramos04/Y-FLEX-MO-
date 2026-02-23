@@ -82,15 +82,17 @@ button:hover {
 let video = document.getElementById("video");
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
+let isRunning = false;
 
 async function startCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     video.srcObject = stream;
 
-    video.onloadedmetadata = () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+    video.onloadeddata = () => {
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      isRunning = true;
       updateCanvas();
     };
 
@@ -100,6 +102,8 @@ async function startCamera() {
 }
 
 function updateCanvas() {
+  if (!isRunning) return;
+
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
   let score = Math.floor(Math.random() * 30) + 70;
@@ -111,10 +115,10 @@ function updateCanvas() {
 function takeScreenshot() {
   let link = document.createElement('a');
   link.download = 'yoga_pose.png';
-  link.href = canvas.toDataURL();
+  link.href = canvas.toDataURL("image/png");
   link.click();
 }
 </script>
-
 </body>
 </html>
+
