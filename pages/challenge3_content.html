@@ -1,225 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI-Powered Yoga Pose Challenge</title>
+<title>AI Yoga Pose Challenge</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+<!-- TensorFlow -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
 
 <style>
-body { font-family: sans-serif; background: #f0fdf4; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-video, canvas { border: 2px solid green; border-radius: 10px; }
-.pose-photo { max-width: 200px; border: 2px solid #006400; border-radius: 10px; margin-bottom: 10px; }
+body { background:#f0fdf4; display:flex; flex-direction:column; align-items:center; padding:20px; }
+video, canvas { border:2px solid green; border-radius:10px; }
+.pose-photo { max-width:200px; border:2px solid #006400; border-radius:10px; margin-bottom:10px; }
 </style>
 </head>
-
 <body>
 
-<h1 class="text-3xl font-bold text-green-700 mb-4">AI-Powered Yoga Pose Challenge</h1>
+<h1 class="text-3xl font-bold text-green-700 mb-4">AI Yoga Pose Challenge</h1>
 
-<div class="text-center mb-4">
-<h2 class="text-xl font-semibold text-green-800">Pose to Copy:</h2>
-<p id="currentPoseName" class="text-2xl font-bold text-green-600">Click Start</p>
-<img id="posePhoto" class="pose-photo" src="" alt="Reference Pose">
-</div>
+<p id="poseName" class="text-xl font-bold text-green-600 mb-2">Click Start</p>
+<img id="posePhoto" class="pose-photo" src="">
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-  <div class="text-center">
-    <h3 class="font-semibold text-green-700 mb-2">Your Camera</h3>
-    <video id="video" autoplay playsinline muted width="640" height="480"></video>
-  </div>
-
-  <div class="text-center">
-    <h3 class="font-semibold text-green-700 mb-2">Pose Detection + Score</h3>
-    <canvas id="overlay" width="640" height="480"></canvas>
-    <p id="scoreDisplay" class="text-xl font-bold text-green-700 mt-2">Score: -</p>
-  </div>
+  <video id="video" width="640" height="480" autoplay playsinline></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
 </div>
 
-<div class="flex gap-4 mb-6">
-<button id="startBtn" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">Start Pose</button>
-<button id="screenshotBtn" class="bg-green-500 text-white px-6 py-2 rounded-xl hover:bg-green-600">Take Screenshot</button>
-</div>
+<p id="score" class="text-2xl font-bold text-green-700 mb-4">Score: -</p>
+
+<button id="startBtn" class="bg-green-600 text-white px-6 py-2 rounded-xl">Start Pose</button>
 
 <script>
 
-// ================= REFERENCE POSES =================
-const referencePoses = [
-
+const poses = [
 {
 name:"Mountain Pose",
 photo:"assets/images/mountainpose.jpg",
-landmarks:{
-11:{x:0.45,y:0.35},12:{x:0.55,y:0.35},
-13:{x:0.45,y:0.50},14:{x:0.55,y:0.50},
-15:{x:0.45,y:0.65},16:{x:0.55,y:0.65},
-23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
-25:{x:0.48,y:0.75},26:{x:0.52,y:0.75},
-27:{x:0.48,y:0.95},28:{x:0.52,y:0.95}
-}
+angles:{leftKnee:180,rightKnee:180,leftElbow:180,rightElbow:180}
 },
-
 {
 name:"Tree Pose",
 photo:"assets/images/treepose.jpg",
-landmarks:{
-11:{x:0.40,y:0.30},12:{x:0.60,y:0.30},
-13:{x:0.35,y:0.20},14:{x:0.65,y:0.20},
-15:{x:0.30,y:0.10},16:{x:0.70,y:0.10},
-23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
-25:{x:0.48,y:0.75},26:{x:0.60,y:0.60},
-27:{x:0.48,y:0.95},28:{x:0.55,y:0.75}
-}
+angles:{leftKnee:180,rightKnee:60,leftElbow:180,rightElbow:180}
 },
-
-{
-name:"Downward-Facing Dog",
-photo:"assets/images/downwardfacingdog.jpg",
-landmarks:{
-11:{x:0.40,y:0.50},12:{x:0.60,y:0.50},
-13:{x:0.35,y:0.60},14:{x:0.65,y:0.60},
-15:{x:0.30,y:0.70},16:{x:0.70,y:0.70},
-23:{x:0.45,y:0.65},24:{x:0.55,y:0.65},
-25:{x:0.48,y:0.80},26:{x:0.52,y:0.80},
-27:{x:0.48,y:0.95},28:{x:0.52,y:0.95}
-}
-},
-
 {
 name:"Warrior I",
 photo:"assets/images/warriori.jpg",
-landmarks:{
-11:{x:0.40,y:0.30},12:{x:0.60,y:0.30},
-13:{x:0.38,y:0.20},14:{x:0.62,y:0.20},
-15:{x:0.36,y:0.10},16:{x:0.64,y:0.10},
-23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
-25:{x:0.40,y:0.70},26:{x:0.60,y:0.75},
-27:{x:0.35,y:0.95},28:{x:0.65,y:0.95}
-}
+angles:{leftKnee:90,rightKnee:180,leftElbow:180,rightElbow:180}
 },
-
 {
 name:"Warrior II",
 photo:"assets/images/warriorii.jpg",
-landmarks:{
-11:{x:0.30,y:0.35},12:{x:0.70,y:0.35},
-13:{x:0.20,y:0.35},14:{x:0.80,y:0.35},
-15:{x:0.10,y:0.35},16:{x:0.90,y:0.35},
-23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
-25:{x:0.40,y:0.75},26:{x:0.65,y:0.75},
-27:{x:0.35,y:0.95},28:{x:0.70,y:0.95}
+angles:{leftKnee:90,rightKnee:180,leftElbow:180,rightElbow:180}
+},
+{
+name:"Downward Dog",
+photo:"assets/images/downwardfacingdog.jpg",
+angles:{leftKnee:180,rightKnee:180,leftElbow:180,rightElbow:180}
 }
-}
-
 ];
 
-let currentReference=null;
+let detector;
+let currentPose=null;
 
 const video=document.getElementById("video");
-const canvas=document.getElementById("overlay");
+const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
-const scoreDisplay=document.getElementById("scoreDisplay");
-const posePhoto=document.getElementById("posePhoto");
+const scoreDisplay=document.getElementById("score");
 
-// ================= SCORING FUNCTION =================
-function calculateSimilarity(userLandmarks, refLandmarks){
-let totalDiff=0;
+function angle(a,b,c){
+const radians=Math.atan2(c.y-b.y,c.x-b.x)-
+Math.atan2(a.y-b.y,a.x-b.x);
+let deg=Math.abs(radians*180/Math.PI);
+if(deg>180) deg=360-deg;
+return deg;
+}
+
+function calculateScore(userAngles,refAngles){
+let total=0;
 let count=0;
-
-for(let key in refLandmarks){
-const user=userLandmarks[key];
-const ref=refLandmarks[key];
-
-const dx=user.x-ref.x;
-const dy=user.y-ref.y;
-const dist=Math.sqrt(dx*dx+dy*dy);
-
-totalDiff+=dist;
+for(let key in refAngles){
+total+=Math.abs(userAngles[key]-refAngles[key]);
 count++;
 }
-
-const avgDiff=totalDiff/count;
-const score=Math.max(0,100-avgDiff*300);
-return Math.floor(score);
+let avg=total/count;
+return Math.max(0,100-avg);
 }
 
-// ================= MEDIAPIPE =================
-const pose=new Pose({
-locateFile:(file)=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
-});
+async function setupCamera(){
+const stream=await navigator.mediaDevices.getUserMedia({video:true});
+video.srcObject=stream;
+await video.play();
+}
 
-pose.setOptions({modelComplexity:1,smoothLandmarks:true});
+async function loadModel(){
+await tf.setBackend("webgl");
+detector=await poseDetection.createDetector(
+poseDetection.SupportedModels.MoveNet
+);
+}
 
-pose.onResults(results=>{
+async function detect(){
+const poses=await detector.estimatePoses(video);
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-if(results.poseLandmarks){
-drawConnectors(ctx,results.poseLandmarks,POSE_CONNECTIONS,{color:'#006400',lineWidth:2});
-drawLandmarks(ctx,results.poseLandmarks,{color:'#008000',lineWidth:1});
+if(poses.length>0 && currentPose){
+const k=poses[0].keypoints;
 
-if(currentReference){
-const score=calculateSimilarity(results.poseLandmarks,currentReference.landmarks);
-scoreDisplay.innerText="Score: "+score;
-}
-}
-});
+const userAngles={
+leftElbow:angle(k[5],k[7],k[9]),
+rightElbow:angle(k[6],k[8],k[10]),
+leftKnee:angle(k[11],k[13],k[15]),
+rightKnee:angle(k[12],k[14],k[16])
+};
 
-// ================= CAMERA =================
-async function startCamera() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-
-    video.srcObject = stream;
-
-    video.onloadedmetadata = async () => {
-      await video.play();
-    };
-
-    const camera = new Camera(video, {
-      onFrame: async () => {
-        await pose.send({ image: video });
-      },
-      width: 640,
-      height: 480
-    });
-
-    camera.start();
-
-  } catch (e) {
-    console.error("Camera error:", e);
-    alert("Camera access denied or not supported.");
-  }
+const score=calculateScore(userAngles,currentPose.angles);
+scoreDisplay.innerText="Score: "+Math.floor(score);
 }
 
-// ================= BUTTONS =================
-document.getElementById("startBtn").addEventListener("click",()=>{
-const index=Math.floor(Math.random()*referencePoses.length);
-currentReference=referencePoses[index];
-document.getElementById("currentPoseName").innerText=currentReference.name;
-posePhoto.src=currentReference.photo;
-startCamera();
-});
+requestAnimationFrame(detect);
+}
 
-document.getElementById("screenshotBtn").addEventListener("click",()=>{
-const tempCanvas=document.createElement("canvas");
-tempCanvas.width=video.videoWidth;
-tempCanvas.height=video.videoHeight;
-const tempCtx=tempCanvas.getContext("2d");
-tempCtx.drawImage(video,0,0);
-tempCtx.drawImage(canvas,0,0);
-const dataUrl=tempCanvas.toDataURL("image/png");
-const a=document.createElement("a");
-a.href=dataUrl;
-a.download="yoga_pose_capture.png";
-a.click();
+document.getElementById("startBtn").addEventListener("click",async()=>{
+currentPose=poses[Math.floor(Math.random()*poses.length)];
+document.getElementById("poseName").innerText=currentPose.name;
+document.getElementById("posePhoto").src=currentPose.photo;
+
+await setupCamera();
+await loadModel();
+detect();
 });
 
 </script>
-
 </body>
 </html>
 
