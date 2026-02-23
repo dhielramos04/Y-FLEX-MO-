@@ -102,7 +102,6 @@ async function startCamera() {
 function updateCanvas() {
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  // Simulated AI score (stable but changing)
   let score = Math.floor(Math.random() * 30) + 70;
   document.getElementById("score").innerText = "Score: " + score;
 
@@ -119,9 +118,3 @@ function takeScreenshot() {
 
 </body>
 </html>
-
-
-
-
-
-
