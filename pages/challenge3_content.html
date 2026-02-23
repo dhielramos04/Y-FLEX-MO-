@@ -2,132 +2,117 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yoga AI Evaluator</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- MediaPipe (NON-MODULE VERSION) -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.5/drawing_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.5/camera_utils.js"></script>
+<title>AI Yoga Pose Challenge</title>
 
 <style>
-body { background:#f0fdf4; display:flex; flex-direction:column; align-items:center; padding:20px; font-family:sans-serif; }
-video, canvas { border-radius:10px; }
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  text-align: center;
+}
+
+.container {
+  border: 3px solid #2e7d32;
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  margin: auto;
+}
+
+h1 { color: #2e7d32; }
+
+.box {
+  display: inline-block;
+  width: 45%;
+  height: 300px;
+  margin: 10px;
+  border-radius: 15px;
+  background: #dff5e1;
+  vertical-align: top;
+}
+
+video, canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+
+button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #1b5e20;
+}
 </style>
 </head>
+
 <body>
 
-<h1 class="text-3xl font-bold text-green-700 mb-4">Yoga AI Pose Evaluator</h1>
+<div class="container">
+  <h1>AI-Powered Yoga Pose Challenge</h1>
+  <h3>Pose to Copy: Tree Pose</h3>
 
-<video id="video" width="640" height="480" playsinline class="hidden"></video>
-<canvas id="canvas" width="640" height="480"></canvas>
+  <div class="box">
+    <h3>Your Camera</h3>
+    <video id="video" autoplay playsinline></video>
+  </div>
 
-<div class="mt-4 text-center">
-<p id="accuracy" class="text-lg font-bold text-green-700">Accuracy: 0%</p>
-<p id="stability" class="text-lg font-bold text-green-700">Stability: 0%</p>
-<p id="flexibility" class="text-lg font-bold text-green-700">Flexibility: 0%</p>
+  <div class="box">
+    <h3>Pose Detection + Score</h3>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <h2 id="score">Score: -</h2>
+
+  <button onclick="startCamera()">Start Pose</button>
+  <button onclick="takeScreenshot()">Take Screenshot</button>
 </div>
 
-<button id="startBtn" class="bg-green-600 text-white px-6 py-2 rounded-xl mt-4">
-Start Camera
-</button>
-
 <script>
+let video = document.getElementById("video");
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 
-const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
 
-let previousLandmarks = null;
+    video.onloadedmetadata = () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      drawToCanvas();
+    };
 
-function calculateAngle(a,b,c){
-const radians = Math.atan2(c.y-b.y, c.x-b.x) - Math.atan2(a.y-b.y, a.x-b.x);
-let angle = Math.abs(radians * 180.0 / Math.PI);
-if(angle > 180) angle = 360 - angle;
-return angle;
+  } catch (err) {
+    alert("Camera access denied or not supported.");
+  }
 }
 
-function onResults(results){
+function drawToCanvas() {
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.drawImage(results.image,0,0,canvas.width,canvas.height);
+  // Simulated AI score
+  let randomScore = Math.floor(Math.random() * 100) + 1;
+  document.getElementById("score").innerText = "Score: " + randomScore;
 
-if(results.poseLandmarks){
-
-drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS,
-{color:'#00FF00', lineWidth:4});
-drawLandmarks(ctx, results.poseLandmarks,
-{color:'#FF0000', lineWidth:2});
-
-const lm = results.poseLandmarks;
-
-const leftElbow = calculateAngle(lm[11], lm[13], lm[15]);
-const rightElbow = calculateAngle(lm[12], lm[14], lm[16]);
-const leftKnee = calculateAngle(lm[23], lm[25], lm[27]);
-const rightKnee = calculateAngle(lm[24], lm[26], lm[28]);
-
-// Accuracy (straight limbs)
-let accuracy = ((leftElbow/180)+(rightElbow/180)+(leftKnee/180)+(rightKnee/180))/4;
-accuracy = Math.min(accuracy,1);
-document.getElementById("accuracy").innerText =
-"Accuracy: " + Math.round(accuracy*100) + "%";
-
-// Flexibility (bending depth)
-let flexibility = ((180-leftKnee)/180 + (180-rightKnee)/180)/2;
-document.getElementById("flexibility").innerText =
-"Flexibility: " + Math.round(flexibility*100) + "%";
-
-// Stability (movement comparison)
-if(previousLandmarks){
-let movement = 0;
-for(let i=0;i<lm.length;i++){
-movement += Math.abs(lm[i].x - previousLandmarks[i].x);
-movement += Math.abs(lm[i].y - previousLandmarks[i].y);
-}
-let stability = Math.max(0,1 - movement*5);
-document.getElementById("stability").innerText =
-"Stability: " + Math.round(stability*100) + "%";
+  requestAnimationFrame(drawToCanvas);
 }
 
-previousLandmarks = lm;
-
+function takeScreenshot() {
+  let link = document.createElement('a');
+  link.download = 'pose.png';
+  link.href = canvas.toDataURL();
+  link.click();
 }
-}
-
-const pose = new Pose({
-locateFile: (file) => {
-return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`;
-}
-});
-
-pose.setOptions({
-modelComplexity:1,
-smoothLandmarks:true,
-minDetectionConfidence:0.5,
-minTrackingConfidence:0.5
-});
-
-pose.onResults(onResults);
-
-document.getElementById("startBtn").addEventListener("click", async ()=>{
-
-const stream = await navigator.mediaDevices.getUserMedia({video:true});
-video.srcObject = stream;
-
-const camera = new Camera(video,{
-onFrame: async ()=>{
-await pose.send({image:video});
-},
-width:640,
-height:480
-});
-
-camera.start();
-
-});
-
 </script>
 
 </body>
