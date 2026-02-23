@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI-Powered Yoga Pose Challenge</title>
 
-<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-
-<!-- MediaPipe Pose -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.5/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 
 <style>
 body { font-family: sans-serif; background: #f0fdf4; display: flex; flex-direction: column; align-items: center; padding: 20px; }
@@ -19,6 +16,7 @@ video, canvas { border: 2px solid green; border-radius: 10px; }
 .pose-photo { max-width: 200px; border: 2px solid #006400; border-radius: 10px; margin-bottom: 10px; }
 </style>
 </head>
+
 <body>
 
 <h1 class="text-3xl font-bold text-green-700 mb-4">AI-Powered Yoga Pose Challenge</h1>
@@ -48,46 +46,138 @@ video, canvas { border: 2px solid green; border-radius: 10px; }
 </div>
 
 <script>
-// -------- Reference poses --------
+
+// ================= REFERENCE POSES =================
 const referencePoses = [
-  { name: "Mountain Pose", photo: "assets/images/mountainpose.jpg", landmarks: [] },
-  { name: "Tree Pose", photo: "assets/images/treepose.jpg", landmarks: [] },
-  { name: "Downward-Facing Dog", photo: "assets/images/downwardfacingdog.jpg", landmarks: [] },
-  { name: "Warrior I", photo: "assets/images/warriori.jpg", landmarks: [] },
-  { name: "Warrior II", photo: "assets/images/warriorii.jpg", landmarks: [] }
+
+{
+name:"Mountain Pose",
+photo:"assets/images/mountainpose.jpg",
+landmarks:{
+11:{x:0.45,y:0.35},12:{x:0.55,y:0.35},
+13:{x:0.45,y:0.50},14:{x:0.55,y:0.50},
+15:{x:0.45,y:0.65},16:{x:0.55,y:0.65},
+23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
+25:{x:0.48,y:0.75},26:{x:0.52,y:0.75},
+27:{x:0.48,y:0.95},28:{x:0.52,y:0.95}
+}
+},
+
+{
+name:"Tree Pose",
+photo:"assets/images/treepose.jpg",
+landmarks:{
+11:{x:0.40,y:0.30},12:{x:0.60,y:0.30},
+13:{x:0.35,y:0.20},14:{x:0.65,y:0.20},
+15:{x:0.30,y:0.10},16:{x:0.70,y:0.10},
+23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
+25:{x:0.48,y:0.75},26:{x:0.60,y:0.60},
+27:{x:0.48,y:0.95},28:{x:0.55,y:0.75}
+}
+},
+
+{
+name:"Downward-Facing Dog",
+photo:"assets/images/downwardfacingdog.jpg",
+landmarks:{
+11:{x:0.40,y:0.50},12:{x:0.60,y:0.50},
+13:{x:0.35,y:0.60},14:{x:0.65,y:0.60},
+15:{x:0.30,y:0.70},16:{x:0.70,y:0.70},
+23:{x:0.45,y:0.65},24:{x:0.55,y:0.65},
+25:{x:0.48,y:0.80},26:{x:0.52,y:0.80},
+27:{x:0.48,y:0.95},28:{x:0.52,y:0.95}
+}
+},
+
+{
+name:"Warrior I",
+photo:"assets/images/warriori.jpg",
+landmarks:{
+11:{x:0.40,y:0.30},12:{x:0.60,y:0.30},
+13:{x:0.38,y:0.20},14:{x:0.62,y:0.20},
+15:{x:0.36,y:0.10},16:{x:0.64,y:0.10},
+23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
+25:{x:0.40,y:0.70},26:{x:0.60,y:0.75},
+27:{x:0.35,y:0.95},28:{x:0.65,y:0.95}
+}
+},
+
+{
+name:"Warrior II",
+photo:"assets/images/warriorii.jpg",
+landmarks:{
+11:{x:0.30,y:0.35},12:{x:0.70,y:0.35},
+13:{x:0.20,y:0.35},14:{x:0.80,y:0.35},
+15:{x:0.10,y:0.35},16:{x:0.90,y:0.35},
+23:{x:0.48,y:0.55},24:{x:0.52,y:0.55},
+25:{x:0.40,y:0.75},26:{x:0.65,y:0.75},
+27:{x:0.35,y:0.95},28:{x:0.70,y:0.95}
+}
+}
+
 ];
 
-let currentReference = null;
+let currentReference=null;
 
-// DOM elements
-const video = document.getElementById("video");
-const canvas = document.getElementById("overlay");
-const ctx = canvas.getContext("2d");
-const scoreDisplay = document.getElementById("scoreDisplay");
-const posePhoto = document.getElementById("posePhoto");
+const video=document.getElementById("video");
+const canvas=document.getElementById("overlay");
+const ctx=canvas.getContext("2d");
+const scoreDisplay=document.getElementById("scoreDisplay");
+const posePhoto=document.getElementById("posePhoto");
 
-// -------- MediaPipe setup --------
-const pose = new Pose({
-  locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`
+// ================= SCORING FUNCTION =================
+function calculateSimilarity(userLandmarks, refLandmarks){
+let totalDiff=0;
+let count=0;
+
+for(let key in refLandmarks){
+const user=userLandmarks[key];
+const ref=refLandmarks[key];
+
+const dx=user.x-ref.x;
+const dy=user.y-ref.y;
+const dist=Math.sqrt(dx*dx+dy*dy);
+
+totalDiff+=dist;
+count++;
+}
+
+const avgDiff=totalDiff/count;
+const score=Math.max(0,100-avgDiff*300);
+return Math.floor(score);
+}
+
+// ================= MEDIAPIPE =================
+const pose=new Pose({
+locateFile:(file)=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
 });
-pose.setOptions({modelComplexity:1, smoothLandmarks:true});
-pose.onResults(results => {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  if(results.poseLandmarks){
-    drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, {color:'#006400', lineWidth:2});
-    drawLandmarks(ctx, results.poseLandmarks, {color:'#008000', lineWidth:1});
-  }
-  // Placeholder score for testing
-  scoreDisplay.innerText = "Score: " + Math.floor(Math.random()*101);
+
+pose.setOptions({modelComplexity:1,smoothLandmarks:true});
+
+pose.onResults(results=>{
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+if(results.poseLandmarks){
+drawConnectors(ctx,results.poseLandmarks,POSE_CONNECTIONS,{color:'#006400',lineWidth:2});
+drawLandmarks(ctx,results.poseLandmarks,{color:'#008000',lineWidth:1});
+
+if(currentReference){
+const score=calculateSimilarity(results.poseLandmarks,currentReference.landmarks);
+scoreDisplay.innerText="Score: "+score;
+}
+}
 });
 
-// -------- Start camera --------
+// ================= CAMERA =================
 async function startCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
     video.srcObject = stream;
-await video.play();
-    
+
+    video.onloadedmetadata = async () => {
+      await video.play();
+    };
 
     const camera = new Camera(video, {
       onFrame: async () => {
@@ -105,29 +195,29 @@ await video.play();
   }
 }
 
-// -------- Start challenge --------
-document.getElementById("startBtn").addEventListener("click", () => {
-  const index = Math.floor(Math.random()*referencePoses.length);
-  currentReference = referencePoses[index];
-  document.getElementById("currentPoseName").innerText = currentReference.name;
-  posePhoto.src = currentReference.photo;
-  startCamera();
+// ================= BUTTONS =================
+document.getElementById("startBtn").addEventListener("click",()=>{
+const index=Math.floor(Math.random()*referencePoses.length);
+currentReference=referencePoses[index];
+document.getElementById("currentPoseName").innerText=currentReference.name;
+posePhoto.src=currentReference.photo;
+startCamera();
 });
 
-// -------- Screenshot --------
-document.getElementById("screenshotBtn").addEventListener("click", () => {
-  const tempCanvas = document.createElement("canvas");
-  tempCanvas.width = video.videoWidth;
-  tempCanvas.height = video.videoHeight;
-  const tempCtx = tempCanvas.getContext("2d");
-  tempCtx.drawImage(video, 0, 0);
-  tempCtx.drawImage(canvas, 0, 0);
-  const dataUrl = tempCanvas.toDataURL("image/png");
-  const a = document.createElement("a");
-  a.href = dataUrl;
-  a.download = "yoga_pose_capture.png";
-  a.click();
+document.getElementById("screenshotBtn").addEventListener("click",()=>{
+const tempCanvas=document.createElement("canvas");
+tempCanvas.width=video.videoWidth;
+tempCanvas.height=video.videoHeight;
+const tempCtx=tempCanvas.getContext("2d");
+tempCtx.drawImage(video,0,0);
+tempCtx.drawImage(canvas,0,0);
+const dataUrl=tempCanvas.toDataURL("image/png");
+const a=document.createElement("a");
+a.href=dataUrl;
+a.download="yoga_pose_capture.png";
+a.click();
 });
+
 </script>
 
 </body>
