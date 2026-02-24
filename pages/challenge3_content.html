@@ -70,6 +70,25 @@ button:hover {
     width: 100%;
   }
 }
+  .instructions {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 15px auto;
+  width: 90%;
+  max-width: 600px;
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.instructions h3 {
+  text-align: center;
+  color: #2e7d32;
+}
+
+.instructions ol {
+  padding-left: 20px;
+}
 </style>
 </head>
 
@@ -77,6 +96,17 @@ button:hover {
 
 <div class="container">
   <h1>AI Yoga Pose Challenge</h1>
+<div class="instructions">
+  <h3>How to Play</h3>
+  <ol>
+    <li>Press <b>Start Challenge</b>.</li>
+    <li>Allow camera access.</li>
+    <li>Copy the yoga pose shown.</li>
+    <li>Wait for the 3-2-1 countdown.</li>
+    <li>Hold the pose for 5 seconds.</li>
+    <li>Get your score and move to the next pose!</li>
+  </ol>
+</div>
 
   <div class="game-area">
 
@@ -212,6 +242,7 @@ function launchConfetti() {
 </script>
 </body>
 </html>
+
 
 
 
