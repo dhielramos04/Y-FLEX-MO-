@@ -60,6 +60,16 @@ button {
 button:hover {
   background: #1b5e20;
 }
+  
+  @media (max-width: 768px) {
+  .game-area {
+    flex-direction: column;
+  }
+
+  .box {
+    width: 100%;
+  }
+}
 </style>
 </head>
 
@@ -72,71 +82,137 @@ button:hover {
 
     <div class="box">
       <h3>Your Camera</h3>
-      <video id="video" autoplay playsinline></video>
+      <video id="video" autoplay playsinline muted></video>
     </div>
 
     <div class="box">
       <h3>Copy This Pose</h3>
-      <img id="poseImage" src="assets/treepose.jpg">
+      <img id="poseImage" src="../assets/images/treepose.jpg">
     </div>
 
   </div>
 
   <h2 id="poseName">Pose: Tree Pose</h2>
+  <h2 id="countdown" style="font-size:40px; color:#ff5722;"></h2>
   <h2 id="score">Score: -</h2>
 
   <button onclick="startGame()">Start Challenge</button>
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
 
 let video = document.getElementById("video");
 let scoreDisplay = document.getElementById("score");
 let poseImage = document.getElementById("poseImage");
 let poseName = document.getElementById("poseName");
+let countdownDisplay = document.getElementById("countdown");
 
 let poses = [
-  {name: "Mountain Pose", img: "../assets/mountainpose.jpg"},
-  {name: "Tree Pose", img: "../assets/treepose.jpg"},
-  {name: "Downward Facing Dog", img: "..assets/downwardfacingdog.jpg"},
-  {name: "Warrior I", img: "../assets/warriori.jpg"},
-  {name: "Warrior II", img: "../assets/warriorii.jpg"}
+  {name: "Mountain Pose", img: "../assets/images/mountainpose.jpg"},
+  {name: "Tree Pose", img: "../assets/images/treepose.jpg"},
+  {name: "Downward Facing Dog", img: "../assets/images/downwardfacingdog.jpg"},
+  {name: "Warrior I", img: "../assets/images/warriori.jpg"},
+  {name: "Warrior II", img: "../assets/images/warriorii.jpg"}
 ];
 
-let interval;
+let countdown;
+let timeLeft = 5;
+let currentScore = 60;
 
 async function startGame() {
+  if (!video.srcObject) {
+    await startCamera();
+  }
+  startRound();
+}
+
+async function startCamera() {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stream = await navigator.mediaDevices.getUserMedia({
+  video: { facingMode: "user" }
+});
     video.srcObject = stream;
   } catch (err) {
     alert("Camera not supported or denied.");
-    return;
   }
-
-  changePose();
-
-  if (interval) clearInterval(interval);
-
-  interval = setInterval(() => {
-    let score = Math.floor(Math.random() * 30) + 70;
-    scoreDisplay.innerText = "Score: " + score;
-  }, 1000);
 }
 
-function changePose() {
+function startRound() {
+
   let randomIndex = Math.floor(Math.random() * poses.length);
   let selected = poses[randomIndex];
 
   poseImage.src = selected.img;
   poseName.innerText = "Pose: " + selected.name;
+
+  let prepTime = 3;
+
+  countdownDisplay.innerText = prepTime;
+
+  let prepCountdown = setInterval(() => {
+    prepTime--;
+
+    if (prepTime > 0) {
+      countdownDisplay.innerText = prepTime;
+    } else if (prepTime === 0) {
+      countdownDisplay.innerText = "GO!";
+    } else {
+      clearInterval(prepCountdown);
+      countdownDisplay.innerText = "";
+      startHolding(); // 👈 start real hold timer
+    }
+  }, 1000);
+}
+
+  function startHolding() {
+
+  timeLeft = 5;
+  currentScore = 60;
+
+  if (countdown) clearInterval(countdown);
+
+  countdown = setInterval(() => {
+
+    timeLeft--;
+    currentScore += Math.random() * 6;
+
+    if (currentScore > 100) currentScore = 100;
+
+    scoreDisplay.innerText =
+      "Hold: " + timeLeft + "s | Score: " + Math.round(currentScore);
+
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+      finishRound();
+    }
+
+  }, 1000);
+}
+  
+function finishRound() {
+
+  scoreDisplay.innerText =
+    "Final Score: " + Math.round(currentScore);
+
+  launchConfetti();
+
+  // Start next pose after 3 seconds
+  setTimeout(startRound, 3000);
+}
+
+function launchConfetti() {
+  confetti({
+    particleCount: 150,
+    spread: 80,
+    origin: { y: 0.6 }
+  });
 }
 
 </script>
-
 </body>
 </html>
+
 
 
 
