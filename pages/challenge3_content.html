@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>AI Yoga Pose Challenge</title>
+<title>Yoga Pose Challenge</title>
 
 <style>
 body {
@@ -14,29 +14,36 @@ body {
 .container {
   border: 3px solid #2e7d32;
   border-radius: 20px;
-  padding: 30px;
-  width: 90%;
+  padding: 20px;
+  width: 95%;
   margin: auto;
 }
 
 h1 { color: #2e7d32; }
 
-.box {
-  display: inline-block;
-  width: 45%;
-  height: 320px;
-  margin: 10px;
-  border-radius: 15px;
-  background: #dff5e1;
-  vertical-align: top;
-  padding: 10px;
+.game-area {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
 }
 
-video, canvas {
+.box {
+  width: 45%;
+  min-width: 300px;
+  margin: 10px;
+}
+
+video {
   width: 100%;
-  height: 260px;
   border-radius: 15px;
   background: black;
+}
+
+img {
+  width: 100%;
+  border-radius: 15px;
 }
 
 button {
@@ -59,66 +66,75 @@ button:hover {
 <body>
 
 <div class="container">
-  <h1>AI-Powered Yoga Pose Challenge</h1>
-  <h3>Pose to Copy: Tree Pose</h3>
+  <h1>AI Yoga Pose Challenge</h1>
 
-  <div class="box">
-    <h3>Your Camera</h3>
-    <video id="video" autoplay playsinline></video>
+  <div class="game-area">
+
+    <div class="box">
+      <h3>Your Camera</h3>
+      <video id="video" autoplay playsinline></video>
+    </div>
+
+    <div class="box">
+      <h3>Copy This Pose</h3>
+      <img id="poseImage" src="assets/treepose.jpg">
+    </div>
+
   </div>
 
-  <div class="box">
-    <h3>Pose Detection + Score</h3>
-    <canvas id="canvas"></canvas>
-  </div>
-
+  <h2 id="poseName">Pose: Tree Pose</h2>
   <h2 id="score">Score: -</h2>
 
-  <button onclick="startCamera()">Start Pose</button>
-  <button onclick="takeScreenshot()">Take Screenshot</button>
+  <button onclick="startGame()">Start Challenge</button>
+
 </div>
 
 <script>
-let video = document.getElementById("video");
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
-let isRunning = false;
 
-async function startCamera() {
+let video = document.getElementById("video");
+let scoreDisplay = document.getElementById("score");
+let poseImage = document.getElementById("poseImage");
+let poseName = document.getElementById("poseName");
+
+let poses = [
+  {name: "Mountain Pose", img: "assets/mountainpose.jpg"},
+  {name: "Tree Pose", img: "assets/treepose.jpg"},
+  {name: "Downward Facing Dog", img: "assets/downwardfacingdog.jpg"},
+  {name: "Warrior I", img: "assets/warriori.jpg"},
+  {name: "Warrior II", img: "assets/warriorii.jpg"}
+];
+
+let interval;
+
+async function startGame() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     video.srcObject = stream;
-
-    video.onloadeddata = () => {
-      canvas.width = video.videoWidth || 640;
-      canvas.height = video.videoHeight || 480;
-      isRunning = true;
-      updateCanvas();
-    };
-
   } catch (err) {
-    alert("Camera access denied or not supported.");
+    alert("Camera not supported or denied.");
+    return;
   }
+
+  changePose();
+
+  if (interval) clearInterval(interval);
+
+  interval = setInterval(() => {
+    let score = Math.floor(Math.random() * 30) + 70;
+    scoreDisplay.innerText = "Score: " + score;
+  }, 1000);
 }
 
-function updateCanvas() {
-  if (!isRunning) return;
+function changePose() {
+  let randomIndex = Math.floor(Math.random() * poses.length);
+  let selected = poses[randomIndex];
 
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  let score = Math.floor(Math.random() * 30) + 70;
-  document.getElementById("score").innerText = "Score: " + score;
-
-  requestAnimationFrame(updateCanvas);
+  poseImage.src = selected.img;
+  poseName.innerText = "Pose: " + selected.name;
 }
 
-function takeScreenshot() {
-  let link = document.createElement('a');
-  link.download = 'yoga_pose.png';
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-}
 </script>
+
 </body>
 </html>
 
