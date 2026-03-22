@@ -304,43 +304,46 @@
         }
 
         // SHOW COMPLETION BUTTON:
-        if (answeredQuestions.size === totalQuestions) {
-            const rawScore = answeredCorrectly.size;   // e.g. 4
-            const stageWeight = 30;                   // Stage 2 = 30 max
-            const weightedScore = (rawScore / totalQuestions) * stageWeight;
+if (answeredQuestions.size === totalQuestions) {
+    const rawScore = answeredCorrectly.size;
+    const stageWeight = 30;
 
-            document.getElementById('raw-score').textContent = rawScore;
-            document.getElementById('weighted-score').textContent = weightedScore.toFixed(2);
+    const weightedScore = Math.round((rawScore / totalQuestions) * stageWeight);
 
-            // Save for dashboard
-            localStorage.setItem('stage2_raw', rawScore);
-            localStorage.setItem('stage2_points', weightedScore);
+    // ✅ DISPLAY ONLY
+    document.getElementById('raw-score').textContent = rawScore;
+    document.getElementById('weighted-score').textContent = weightedScore;
 
-            document.getElementById('completion-zone').classList.remove('hidden');
-            document.getElementById('completion-zone').scrollIntoView({ behavior: 'smooth' });
-        }
+    document.getElementById('completion-zone').classList.remove('hidden');
+    document.getElementById('completion-zone').scrollIntoView({ behavior: 'smooth' });
+}
     } // ← Make sure this closing brace is here!
 
-    // COMPLETE CHALLENGE FUNCTION (now properly global)
-    function completeChallenge() {
-        const finalScore = answeredCorrectly.size;
-        const stageWeight = 30;
-        const rewardPoints = (finalScore / totalQuestions) * stageWeight;
-        
-        // Save to localStorage
-        localStorage.setItem('challenge2_complete', 'true');
-        localStorage.setItem('challenge2_score', finalScore);
-        localStorage.setItem('challenge2_points', rewardPoints);
-        
-        // Rank Feedback
-        let rank = "Bronze (Trainee)";
-        if (finalScore === 5) rank = "Gold (Master)";
-        else if (finalScore >= 3) rank = "Silver (Practitioner)";
+function completeChallenge() {
 
-        alert(`Challenge 2 Finished!\nYour Score: ${finalScore}/5\nEarned Rank: ${rank}\nXP Points: ${rewardPoints.toFixed(2)}`);
-        
-        // Redirect to dashboard
-        window.location.href = "dashboard.html"; 
+    if (answeredQuestions.size < totalQuestions) {
+        alert("Please answer all questions before completing the challenge.");
+        return;
+    }
+
+    const rawScore = answeredCorrectly.size;
+    const stageWeight = 30;
+
+    const challenge2Score = Math.round((rawScore / totalQuestions) * stageWeight);
+
+    // ✅ STANDARDIZED STORAGE
+    localStorage.setItem('challenge2Score', challenge2Score);
+    localStorage.setItem('challenge2Complete', 'true');
+
+    // Rank Feedback
+    let rank = "Bronze (Trainee)";
+    if (rawScore === 5) rank = "Gold (Master)";
+    else if (rawScore >= 3) rank = "Silver (Practitioner)";
+
+    alert(`Challenge 2 Finished!\nScore: ${rawScore}/5\nEquivalent: ${challenge2Score}/30\nRank: ${rank}`);
+
+    window.location.href = "dashboard.html";
+}
     }
 </script>
 
