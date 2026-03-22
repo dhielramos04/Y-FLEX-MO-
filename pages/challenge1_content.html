@@ -226,12 +226,6 @@ function checkAnswer(btn, questionIndex, selectedAnswer) {
         document.getElementById("percentage-score").textContent = percentage.toFixed(0);
         document.getElementById("weighted-score").textContent = weightedScore.toFixed(2);
 
-        // Save to localStorage for dashboard
-        localStorage.setItem("challenge1_complete", "true");
-        localStorage.setItem("challenge1_score", rawScore);
-        localStorage.setItem("challenge1_points", weightedScore);
-    }
-}
 
 // --- Finish Challenge ---
 function finishChallenge() {
@@ -241,8 +235,19 @@ function finishChallenge() {
         return;
     }
 
-    // Mark stage complete and redirect
-    localStorage.setItem("challenge1_complete", "true");
+    // ✅ Recompute score (ensures accuracy)
+    const rawScore = answeredCorrectly.size;
+    const stageWeight = 20;
+
+    const weightedScore = Math.round((rawScore / totalQuestions) * stageWeight);
+
+    // ✅ Save standardized score (USED BY DASHBOARD)
+    localStorage.setItem("challenge1Score", weightedScore);
+
+    // ✅ Mark completion (standardized naming)
+    localStorage.setItem("challenge1Complete", "true");
+
+    // Redirect
     window.location.href = "dashboard.html";
 }
 
