@@ -222,21 +222,21 @@ function startRound() {
   
 function finishRound() {
 
+  let finalRawScore = Math.round(currentScore);
+
+  // ✅ Normalize to 50 points
+  let challenge3Score = Math.round((finalRawScore / 100) * 50);
+
+  // ✅ Save to localStorage
+  localStorage.setItem("challenge3Score", challenge3Score);
+
   scoreDisplay.innerText =
-    "Final Score: " + Math.round(currentScore);
+    "Final Score: " + finalRawScore + 
+    " | Equivalent: " + challenge3Score + "/50";
 
   launchConfetti();
 
-  // Start next pose after 3 seconds
   setTimeout(startRound, 3000);
-}
-
-function launchConfetti() {
-  confetti({
-    particleCount: 150,
-    spread: 80,
-    origin: { y: 0.6 }
-  });
 }
 
 </script>
