@@ -190,14 +190,13 @@ function initQuiz() {
 }
 
 // --- Check Answer ---
+// --- Check Answer ---
 function checkAnswer(btn, questionIndex, selectedAnswer) {
     const parent = btn.closest(".quiz-item");
     const buttons = parent.querySelectorAll(".option-btn");
 
-    // Reset previous selection visuals
     buttons.forEach(b => b.classList.remove("correct", "wrong"));
 
-    // Track answered questions
     answeredQuestions.add(questionIndex);
 
     if (selectedAnswer === quizData[questionIndex].answer) {
@@ -206,8 +205,6 @@ function checkAnswer(btn, questionIndex, selectedAnswer) {
     } else {
         btn.classList.add("wrong");
         answeredCorrectly.delete(questionIndex);
-
-        // Show correct answer
         buttons.forEach(b => {
             if (b.textContent.trim() === quizData[questionIndex].answer) {
                 b.classList.add("correct");
@@ -215,37 +212,34 @@ function checkAnswer(btn, questionIndex, selectedAnswer) {
         });
     }
 
-    // Update final scores only after all questions attempted
     if (answeredQuestions.size === totalQuestions) {
         const rawScore = answeredCorrectly.size;
-        const stageWeight = 20; // Stage 1 weight toward total 100
+        const stageWeight = 20;
         const percentage = (rawScore / totalQuestions) * 100;
         const weightedScore = (rawScore / totalQuestions) * stageWeight;
 
         document.getElementById("final-score").textContent = rawScore;
         document.getElementById("percentage-score").textContent = percentage.toFixed(0);
         document.getElementById("weighted-score").textContent = weightedScore.toFixed(2);
-
+    }
+}
 
 // --- Finish Challenge ---
 function finishChallenge() {
-    // Ensure all questions are answered
     if (answeredQuestions.size < totalQuestions) {
         alert("Please answer all quiz questions before completing the stage.");
         return;
     }
 
-    const stageNumber = 1;          // Challenge 1
+    const stageNumber = 1;
     const rawScore = answeredCorrectly.size;
-    const stageWeight = 20;         // Stage 1 weight
+    const stageWeight = 20;
     const weightedPoints = Math.round((rawScore / totalQuestions) * stageWeight);
 
-    // Save to localStorage for dashboard
     localStorage.setItem(`challenge${stageNumber}_score`, rawScore);
     localStorage.setItem(`challenge${stageNumber}_points`, weightedPoints);
     localStorage.setItem(`challenge${stageNumber}_complete`, 'true');
 
-    // Determine badge tier
     let badgeTier = 'Bronze';
     if (rawScore === totalQuestions) badgeTier = 'Gold';
     else if (rawScore >= Math.ceil(totalQuestions * 0.6)) badgeTier = 'Silver';
@@ -253,7 +247,6 @@ function finishChallenge() {
 
     alert(`Stage ${stageNumber} Completed!\nScore: ${rawScore}/${totalQuestions}\nPoints Earned: ${weightedPoints}\nBadge: ${badgeTier}`);
 
-    // Redirect to dashboard
     window.location.href = 'dashboard.html';
 }
 
@@ -261,9 +254,8 @@ function finishChallenge() {
 window.onload = () => {
     initQuiz();
     const learner = localStorage.getItem("learnerName");
-    if (learner) {
-        document.getElementById("learnerDisplay").textContent = learner;
-    }
+    if (learner) document.getElementById("learnerDisplay").textContent = learner;
+};
 };
 </script>
 
