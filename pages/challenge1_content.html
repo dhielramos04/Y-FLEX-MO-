@@ -235,20 +235,26 @@ function finishChallenge() {
         return;
     }
 
-    // ✅ Recompute score (ensures accuracy)
+    const stageNumber = 1;          // Challenge 1
     const rawScore = answeredCorrectly.size;
-    const stageWeight = 20;
+    const stageWeight = 20;         // Stage 1 weight
+    const weightedPoints = Math.round((rawScore / totalQuestions) * stageWeight);
 
-    const weightedScore = Math.round((rawScore / totalQuestions) * stageWeight);
+    // Save to localStorage for dashboard
+    localStorage.setItem(`challenge${stageNumber}_score`, rawScore);
+    localStorage.setItem(`challenge${stageNumber}_points`, weightedPoints);
+    localStorage.setItem(`challenge${stageNumber}_complete`, 'true');
 
-    // ✅ Save standardized score (USED BY DASHBOARD)
-    localStorage.setItem("challenge1Score", weightedScore);
+    // Determine badge tier
+    let badgeTier = 'Bronze';
+    if (rawScore === totalQuestions) badgeTier = 'Gold';
+    else if (rawScore >= Math.ceil(totalQuestions * 0.6)) badgeTier = 'Silver';
+    localStorage.setItem(`challenge${stageNumber}_badge`, badgeTier);
 
-    // ✅ Mark completion (standardized naming)
-    localStorage.setItem("challenge1Complete", "true");
+    alert(`Stage ${stageNumber} Completed!\nScore: ${rawScore}/${totalQuestions}\nPoints Earned: ${weightedPoints}\nBadge: ${badgeTier}`);
 
-    // Redirect
-    window.location.href = "dashboard.html";
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
 }
 
 // --- On Page Load ---
