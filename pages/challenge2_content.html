@@ -320,29 +320,32 @@ if (answeredQuestions.size === totalQuestions) {
     } // ← Make sure this closing brace is here!
 
 function completeChallenge() {
-
     if (answeredQuestions.size < totalQuestions) {
         alert("Please answer all questions before completing the challenge.");
         return;
     }
 
+    const stageNumber = 2;             // Challenge 2
     const rawScore = answeredCorrectly.size;
     const stageWeight = 30;
+    const weightedPoints = Math.round((rawScore / totalQuestions) * stageWeight);
 
-    const challenge2Score = Math.round((rawScore / totalQuestions) * stageWeight);
+    // Save to localStorage for dashboard
+    localStorage.setItem(`challenge${stageNumber}_score`, rawScore);
+    localStorage.setItem(`challenge${stageNumber}_points`, weightedPoints);
+    localStorage.setItem(`challenge${stageNumber}_complete`, 'true');
 
-    // ✅ STANDARDIZED STORAGE
-    localStorage.setItem('challenge2Score', challenge2Score);
-    localStorage.setItem('challenge2Complete', 'true');
+    // Badge tier
+    let badgeTier = 'Bronze';
+    if (rawScore === totalQuestions) badgeTier = 'Gold';
+    else if (rawScore >= Math.ceil(totalQuestions * 0.6)) badgeTier = 'Silver';
+    localStorage.setItem(`challenge${stageNumber}_badge`, badgeTier);
 
-    // Rank Feedback
-    let rank = "Bronze (Trainee)";
-    if (rawScore === 5) rank = "Gold (Master)";
-    else if (rawScore >= 3) rank = "Silver (Practitioner)";
+    alert(`Stage ${stageNumber} Completed!\nScore: ${rawScore}/${totalQuestions}\nPoints Earned: ${weightedPoints}\nBadge: ${badgeTier}`);
 
-    alert(`Challenge 2 Finished!\nScore: ${rawScore}/5\nEquivalent: ${challenge2Score}/30\nRank: ${rank}`);
-
+    // Redirect to dashboard
     window.location.href = "dashboard.html";
+}
 }
     }
 </script>
