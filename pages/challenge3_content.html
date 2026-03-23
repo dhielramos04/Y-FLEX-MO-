@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Yoga Pose Challenge</title>
-
+<title>AI Yoga Pose Challenge</title>
 <style>
 body {
   font-family: Arial, sans-serif;
   background: #f4f4f4;
   text-align: center;
+  margin:0; padding:0;
 }
 
 .container {
@@ -16,7 +16,9 @@ body {
   border-radius: 20px;
   padding: 20px;
   width: 95%;
-  margin: auto;
+  max-width: 800px;
+  margin: 20px auto;
+  background: #fff;
 }
 
 h1 { color: #2e7d32; }
@@ -35,15 +37,10 @@ h1 { color: #2e7d32; }
   margin: 10px;
 }
 
-video {
+video, img {
   width: 100%;
   border-radius: 15px;
   background: black;
-}
-
-img {
-  width: 100%;
-  border-radius: 15px;
 }
 
 button {
@@ -60,17 +57,13 @@ button {
 button:hover {
   background: #1b5e20;
 }
-  
-  @media (max-width: 768px) {
-  .game-area {
-    flex-direction: column;
-  }
 
-  .box {
-    width: 100%;
-  }
+@media (max-width: 768px) {
+  .game-area { flex-direction: column; }
+  .box { width: 100%; }
 }
-  .instructions {
+
+.instructions {
   background: #ffffff;
   border-radius: 15px;
   padding: 15px;
@@ -86,30 +79,44 @@ button:hover {
   color: #2e7d32;
 }
 
-.instructions ol {
-  padding-left: 20px;
+.instructions ol { padding-left: 20px; }
+
+/* Flash animations */
+@keyframes flashGreen {
+  0% { background-color: rgba(72,187,120,0.7); }
+  50% { background-color: rgba(72,187,120,1); }
+  100% { background-color: rgba(72,187,120,0.7); }
 }
+@keyframes flashRed {
+  0% { background-color: rgba(239,68,68,0.7); }
+  50% { background-color: rgba(239,68,68,1); }
+  100% { background-color: rgba(239,68,68,0.7); }
+}
+.flash-green { animation: flashGreen 0.5s ease-in-out; }
+.flash-red { animation: flashRed 0.5s ease-in-out; }
+
+#countdown { font-size: 50px; color: #ff5722; margin: 10px 0; }
+#score { font-size: 24px; color: #2e7d32; margin: 10px 0; }
 </style>
 </head>
 
 <body>
-
 <div class="container">
   <h1>AI Yoga Pose Challenge</h1>
-<div class="instructions">
-  <h3>How to Play</h3>
-  <ol>
-    <li>Press <b>Start Challenge</b>.</li>
-    <li>Allow camera access.</li>
-    <li>Copy the yoga pose shown.</li>
-    <li>Wait for the 3-2-1 countdown.</li>
-    <li>Hold the pose for 5 seconds.</li>
-    <li>Get your score and move to the next pose!</li>
-  </ol>
-</div>
+
+  <div class="instructions">
+    <h3>How to Play</h3>
+    <ol>
+      <li>Press <b>Start Challenge</b>.</li>
+      <li>Allow camera access.</li>
+      <li>Copy the yoga pose shown.</li>
+      <li>Wait for the 3-2-1 countdown.</li>
+      <li>Hold the pose for 5 seconds.</li>
+      <li>Get your score and move to the next pose!</li>
+    </ol>
+  </div>
 
   <div class="game-area">
-
     <div class="box">
       <h3>Your Camera</h3>
       <video id="video" autoplay playsinline muted></video>
@@ -117,26 +124,25 @@ button:hover {
 
     <div class="box">
       <h3>Copy This Pose</h3>
-      <img id="poseImage" src="../assets/images/treepose.jpg">
+      <img id="poseImage" src="../assets/images/treepose.jpg" alt="Yoga Pose">
     </div>
-
   </div>
 
   <h2 id="poseName">Pose: Tree Pose</h2>
-  <h2 id="countdown" style="font-size:40px; color:#ff5722;"></h2>
+  <h2 id="countdown"></h2>
   <h2 id="score">Score: -</h2>
 
-  <button onclick="startGame()">Start Challenge</button>
-
+  <button id="startBtn">Start Challenge</button>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-
 let video = document.getElementById("video");
 let scoreDisplay = document.getElementById("score");
 let poseImage = document.getElementById("poseImage");
 let poseName = document.getElementById("poseName");
 let countdownDisplay = document.getElementById("countdown");
+let startBtn = document.getElementById("startBtn");
 
 let poses = [
   {name: "Mountain Pose", img: "../assets/images/mountainpose.jpg"},
@@ -146,118 +152,107 @@ let poses = [
   {name: "Warrior II", img: "../assets/images/warriorii.jpg"}
 ];
 
+let currentPoseIndex = 0;
+let totalPoses = poses.length;
 let countdown;
-let timeLeft = 5;
-let currentScore = 60;
+let timeLeft;
+let currentScore;
+let totalRawScore = 0;
 
-async function startGame() {
-  if (!video.srcObject) {
-    await startCamera();
-  }
-  startRound();
-}
-
+// Camera
 async function startCamera() {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-  video: { facingMode: "user" }
-});
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
     video.srcObject = stream;
-  } catch (err) {
-    alert("Camera not supported or denied.");
-  }
+  } catch (err) { alert("Camera not supported or denied."); }
 }
 
+startBtn.addEventListener("click", async () => {
+  if (!video.srcObject) await startCamera();
+  startBtn.style.display = "none";
+  startRound();
+});
+
 function startRound() {
+  if(currentPoseIndex >= totalPoses){
+    finishGame();
+    return;
+  }
 
-  let randomIndex = Math.floor(Math.random() * poses.length);
-  let selected = poses[randomIndex];
-
+  let selected = poses[currentPoseIndex];
   poseImage.src = selected.img;
   poseName.innerText = "Pose: " + selected.name;
 
   let prepTime = 3;
-
   countdownDisplay.innerText = prepTime;
+  countdownDisplay.style.display = "block";
 
   let prepCountdown = setInterval(() => {
     prepTime--;
-
-    if (prepTime > 0) {
-      countdownDisplay.innerText = prepTime;
-    } else if (prepTime === 0) {
-      countdownDisplay.innerText = "GO!";
-    } else {
-      clearInterval(prepCountdown);
-      countdownDisplay.innerText = "";
-      startHolding(); // 👈 start real hold timer
-    }
+    if(prepTime > 0) countdownDisplay.innerText = prepTime;
+    else if(prepTime === 0) countdownDisplay.innerText = "GO!";
+    else { clearInterval(prepCountdown); countdownDisplay.innerText = ""; startHolding(); }
   }, 1000);
 }
 
-  function startHolding() {
-
+function startHolding() {
   timeLeft = 5;
   currentScore = 60;
 
-  if (countdown) clearInterval(countdown);
+  if(countdown) clearInterval(countdown);
 
   countdown = setInterval(() => {
-
     timeLeft--;
     currentScore += Math.random() * 6;
+    if(currentScore > 100) currentScore = 100;
 
-    if (currentScore > 100) currentScore = 100;
+    scoreDisplay.innerText = `Pose ${currentPoseIndex+1}/${totalPoses} | Score: ${Math.round(currentScore)}`;
+    countdownDisplay.innerText = timeLeft > 0 ? timeLeft : "Hold Complete!";
 
-    scoreDisplay.innerText =
-      "Hold: " + timeLeft + "s | Score: " + Math.round(currentScore);
-
-    if (timeLeft <= 0) {
-      clearInterval(countdown);
-      finishRound();
+    // Flash feedback
+    if(Math.round(currentScore) >= 80){
+      countdownDisplay.classList.add("flash-green");
+      setTimeout(()=> countdownDisplay.classList.remove("flash-green"), 500);
+    } else if(Math.round(currentScore) < 50){
+      countdownDisplay.classList.add("flash-red");
+      setTimeout(()=> countdownDisplay.classList.remove("flash-red"), 500);
     }
 
+    if(timeLeft <= 0){
+      clearInterval(countdown);
+      totalRawScore += Math.round(currentScore);
+      currentPoseIndex++;
+      setTimeout(startRound, 1000); // next pose
+    }
   }, 1000);
 }
-  
-function finishRound() {
-    let finalRawScore = Math.round(currentScore);
 
-    // Normalize to 50 points
-    const stageWeight = 50;
-    let weightedPoints = Math.round((finalRawScore / 100) * stageWeight);
+function finishGame(){
+  const stageNumber = 3;
+  const stageWeight = 50;
+  let weightedPoints = Math.round((totalRawScore / (totalPoses * 100)) * stageWeight);
 
-    const stageNumber = 3;
+  let badgeTier = "Bronze";
+  if(totalRawScore >= 450) badgeTier = "Gold";
+  else if(totalRawScore >= 300) badgeTier = "Silver";
 
-    // Save standardized data for dashboard
-    localStorage.setItem(`challenge${stageNumber}_score`, finalRawScore);
-    localStorage.setItem(`challenge${stageNumber}_points`, weightedPoints);
-    localStorage.setItem(`challenge${stageNumber}_complete`, 'true');
+  localStorage.setItem(`challenge${stageNumber}_score`, totalRawScore);
+  localStorage.setItem(`challenge${stageNumber}_points`, weightedPoints);
+  localStorage.setItem(`challenge${stageNumber}_complete`, 'true');
+  localStorage.setItem(`challenge${stageNumber}_badge`, badgeTier);
 
-    // Determine badge tier
-    let badgeTier = "Bronze";
-    if (finalRawScore >= 90) badgeTier = "Gold";
-    else if (finalRawScore >= 60) badgeTier = "Silver";
-    localStorage.setItem(`challenge${stageNumber}_badge`, badgeTier);
+  scoreDisplay.innerText = `Final Score: ${totalRawScore} | Equivalent: ${weightedPoints}/${stageWeight} | Badge: ${badgeTier}`;
 
-    // Update display
-    scoreDisplay.innerText =
-      `Final Score: ${finalRawScore} | Equivalent: ${weightedPoints}/${stageWeight} | Badge: ${badgeTier}`;
+  // Confetti
+  confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-    launchConfetti();
-
-    // Wait 3 seconds then redirect to dashboard
-    setTimeout(() => {
-        alert(`Challenge 3 Completed!\nScore: ${finalRawScore}/100\nPoints Earned: ${weightedPoints}/${stageWeight}\nBadge: ${badgeTier}`);
-        window.location.href = "dashboard.html";
-    }, 3000);
+  setTimeout(() => {
+    alert(`Challenge Completed!\nScore: ${totalRawScore}\nPoints: ${weightedPoints}/${stageWeight}\nBadge: ${badgeTier}`);
+    window.location.href = "dashboard.html";
+  }, 3000);
 }
-
 </script>
 </body>
 </html>
-
-
-
 
 
