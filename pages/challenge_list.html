@@ -1,106 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoga Mastery - Challenges</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        /* Green and White Dashboard Theme */
-        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; }
-        
-        .locked-state {
-            filter: grayscale(1);
-            opacity: 0.6;
-            pointer-events: none;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoga Mastery - Challenges</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #166534; }
 
-        .challenge-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            background-color: #ffffff;
-            border: 1px solid #dcfce7;
-        }
+    .sidebar { 
+        width: 280px; height: 100vh; position: fixed; left: 0; top: 0; 
+        background-color: #ffffff; border-right: 1px solid #dcfce7; display: flex; flex-direction: column;
+        transition: transform 0.3s ease; z-index:40;
+    }
+    .sidebar.hidden { transform: translateX(-100%); }
 
-        .active-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(22, 101, 52, 0.1);
-        }
-    </style>
+    .main-content { margin-left: 280px; padding: 40px; min-height: 100vh; transition: margin-left 0.3s ease; }
+    .main-content.full { margin-left: 0; }
+
+    .nav-item { display: flex; align-items: center; padding: 12px 24px; margin: 4px 16px; border-radius: 12px; color: #4b5563; font-weight: 600; transition: all 0.2s; }
+    .nav-item:hover { background-color: #f0fdf4; color: #166534; }
+    .nav-item.active { background-color: #dcfce7; color: #15803d; }
+
+    .locked-state { filter: grayscale(1); opacity: 0.6; pointer-events: none; }
+    .challenge-card { transition: transform 0.2s ease, box-shadow 0.2s ease; background-color: #ffffff; border: 1px solid #dcfce7; }
+    .active-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(22, 101, 52, 0.1); }
+</style>
 </head>
-<body class="p-6 md:p-12 lg:p-20">
+<body>
 
-    <div class="max-w-5xl mx-auto">
-        <header class="mb-12">
-            <h1 class="text-4xl font-extrabold text-green-900 tracking-tight">Yoga Journey</h1>
-            <p class="text-green-700 text-lg mt-2 font-medium italic">
-                Each challenge is accompanied with points and rewards once completed to advance your level.
-            </p>
-        </header>
+<!-- Mobile Menu Toggle -->
+<button id="sidebar-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-green-600 text-white px-4 py-2 rounded-md">☰ Menu</button>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <div id="challenge-1" class="active-card challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full border-t-4 border-t-green-500">
-                <div class="text-5xl mb-6">📜</div>
-                <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 1: History, Foundations & Benefits</h2>
-                <p class="text-gray-600 mb-8 flex-grow">Learn about the Indus Valley origins and how yoga improves flexibility, heart health, and sleep.</p>
-                
-                <a href="challenge1_content.html" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-center hover:bg-green-700 transition shadow-lg shadow-green-100">
-                    Start Challenge
-                </a>
-            </div>
+<aside class="sidebar hidden lg:block">
+    <div class="p-8">
+        <h1 class="text-2xl font-black text-green-800 tracking-tighter">Y-FLEX MO</h1>
+    </div>
 
-            <div id="challenge-2" class="locked-state challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full">
-                <div class="text-5xl mb-6">🧘‍♀️</div>
-                <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 2: Yoga Types</h2>
-                <p class="text-gray-600 mb-8 flex-grow">Master the differences between Hatha, Ashtanga, and Vinyasa flow sequences.</p>
-                
-                <button disabled class="w-full bg-gray-200 text-gray-500 py-4 rounded-2xl font-bold cursor-not-allowed">
-                    Locked
-                </button>
-            </div>
+    <nav class="flex-grow">
+        <a href="dashboard.html" class="nav-item">
+            <span class="mr-3">🏠</span> Dashboard
+        </a>
+        <a href="challenges_list.html" class="nav-item active">
+            <span class="mr-3">📜</span> Challenges
+        </a>
+        <a href="myprogress.html" class="nav-item">
+            <span class="mr-3">📊</span> My Progress
+        </a>
+        <a href="rewards.html" class="nav-item">
+            <span class="mr-3">🏆</span> Rewards
+        </a>
+    </nav>
 
-            <div id="challenge-3" class="locked-state challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full">
-                <div class="text-5xl mb-6">🏆</div>
-                <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 3: Be A Yoga Master</h2>
-                <p class="text-gray-600 mb-8 flex-grow">A performance challenge to solidify your practice.</p>
-                
-                <button disabled class="w-full bg-gray-200 text-gray-500 py-4 rounded-2xl font-bold cursor-not-allowed">
-                    Locked
-                </button>
-            </div>
+    <div class="p-6 border-t border-green-50">
+        <a href="#" class="nav-item text-red-500 hover:bg-red-50">
+            <span class="mr-3">🚪</span> Logout
+        </a>
+    </div>
+</aside>
 
+<main class="main-content">
+    <header class="mb-12">
+        <h1 class="text-4xl font-extrabold text-green-900 tracking-tight">Yoga Journey</h1>
+        <p class="text-green-700 text-lg mt-2 font-medium italic">Each challenge is accompanied with points and rewards once completed to advance your level.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Stage 1 -->
+        <div id="challenge-1" class="active-card challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full border-t-4 border-t-green-500">
+            <div class="text-5xl mb-6">📜</div>
+            <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 1: History, Foundations & Benefits</h2>
+            <p class="text-gray-600 mb-8 flex-grow">Learn about the Indus Valley origins and how yoga improves flexibility, heart health, and sleep.</p>
+            <a href="challenge1_content.html" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-center hover:bg-green-700 transition shadow-lg shadow-green-100">
+                Start Challenge
+            </a>
         </div>
 
-        <div class="mt-12 p-6 bg-white rounded-2xl border border-green-200 flex items-center shadow-sm">
-            <span class="text-2xl mr-4">✨</span>
-            <p class="text-green-800 font-medium">
-                Complete <strong>Stage 1</strong> to earn your first reward and unlock the next level.
-            </p>
+        <!-- Stage 2 -->
+        <div id="challenge-2" class="locked-state challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full">
+            <div class="text-5xl mb-6">🧘‍♀️</div>
+            <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 2: Yoga Types</h2>
+            <p class="text-gray-600 mb-8 flex-grow">Master the differences between Hatha, Ashtanga, and Vinyasa flow sequences.</p>
+            <button disabled class="w-full bg-gray-200 text-gray-500 py-4 rounded-2xl font-bold cursor-not-allowed">
+                Locked
+            </button>
+        </div>
+
+        <!-- Stage 3 -->
+        <div id="challenge-3" class="locked-state challenge-card p-8 rounded-3xl shadow-sm flex flex-col h-full">
+            <div class="text-5xl mb-6">🏆</div>
+            <h2 class="text-2xl font-bold text-green-800 mb-2">Stage 3: Be A Yoga Master</h2>
+            <p class="text-gray-600 mb-8 flex-grow">A performance challenge to solidify your practice.</p>
+            <button disabled class="w-full bg-gray-200 text-gray-500 py-4 rounded-2xl font-bold cursor-not-allowed">
+                Locked
+            </button>
         </div>
     </div>
 
+    <div class="mt-12">
+        <a href="dashboard.html" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700">← Back to Dashboard</a>
+    </div>
+</main>
+
 <script>
+    // Sidebar toggle
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('hidden');
+        mainContent.classList.toggle('full');
+    });
+
     window.onload = function() {
         // Unlock Stage 2 if Challenge 1 is complete
-        if (localStorage.getItem('challenge1_complete') === 'true') {
-            const stage2 = document.getElementById('challenge-2');
-            unlockChallenge(stage2, 'challenge2_content.html');
-        }
-
+        if (localStorage.getItem('challenge1_complete') === 'true') unlockChallenge('challenge-2', 'challenge2_content.html');
         // Unlock Stage 3 if Challenge 2 is complete
-        if (localStorage.getItem('challenge2_complete') === 'true') {
-            const stage3 = document.getElementById('challenge-3');
-            unlockChallenge(stage3, 'challenge3_content.html');
-        }
+        if (localStorage.getItem('challenge2_complete') === 'true') unlockChallenge('challenge-3', 'challenge3_content.html');
     };
 
-    function unlockChallenge(challengeCard, url) {
-        challengeCard.classList.remove('locked-state');
-        challengeCard.classList.add('active-card');
-        challengeCard.style.borderTop = "4px solid #22c55e";
+    function unlockChallenge(challengeId, url) {
+        const card = document.getElementById(challengeId);
+        card.classList.remove('locked-state');
+        card.classList.add('active-card');
+        card.style.borderTop = "4px solid #22c55e";
 
-        const btn = challengeCard.querySelector('button');
+        const btn = card.querySelector('button');
         btn.removeAttribute('disabled');
         btn.className = "w-full bg-green-600 text-white py-4 rounded-2xl font-bold hover:bg-green-700 shadow-lg shadow-green-100";
         btn.innerText = "Start Challenge";
@@ -109,5 +135,4 @@
 </script>
 
 </body>
-
 </html>
