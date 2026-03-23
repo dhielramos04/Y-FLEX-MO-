@@ -221,22 +221,36 @@ function startRound() {
 }
   
 function finishRound() {
+    let finalRawScore = Math.round(currentScore);
 
-  let finalRawScore = Math.round(currentScore);
+    // Normalize to 50 points
+    const stageWeight = 50;
+    let weightedPoints = Math.round((finalRawScore / 100) * stageWeight);
 
-  // ✅ Normalize to 50 points
-  let challenge3Score = Math.round((finalRawScore / 100) * 50);
+    const stageNumber = 3;
 
-  // ✅ Save to localStorage
-  localStorage.setItem("challenge3Score", challenge3Score);
+    // Save standardized data for dashboard
+    localStorage.setItem(`challenge${stageNumber}_score`, finalRawScore);
+    localStorage.setItem(`challenge${stageNumber}_points`, weightedPoints);
+    localStorage.setItem(`challenge${stageNumber}_complete`, 'true');
 
-  scoreDisplay.innerText =
-    "Final Score: " + finalRawScore + 
-    " | Equivalent: " + challenge3Score + "/50";
+    // Determine badge tier
+    let badgeTier = "Bronze";
+    if (finalRawScore >= 90) badgeTier = "Gold";
+    else if (finalRawScore >= 60) badgeTier = "Silver";
+    localStorage.setItem(`challenge${stageNumber}_badge`, badgeTier);
 
-  launchConfetti();
+    // Update display
+    scoreDisplay.innerText =
+      `Final Score: ${finalRawScore} | Equivalent: ${weightedPoints}/${stageWeight} | Badge: ${badgeTier}`;
 
-  setTimeout(startRound, 3000);
+    launchConfetti();
+
+    // Wait 3 seconds then redirect to dashboard
+    setTimeout(() => {
+        alert(`Challenge 3 Completed!\nScore: ${finalRawScore}/100\nPoints Earned: ${weightedPoints}/${stageWeight}\nBadge: ${badgeTier}`);
+        window.location.href = "dashboard.html";
+    }, 3000);
 }
 
 </script>
