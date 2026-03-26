@@ -9,12 +9,22 @@
 <style>
     body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #166534; }
 
+    /* Sidebar Styles */
     .sidebar { 
         width: 280px; height: 100vh; position: fixed; left: 0; top: 0; 
         background-color: #ffffff; border-right: 1px solid #dcfce7; display: flex; flex-direction: column;
         transition: transform 0.3s ease; z-index:50;
     }
+    /* Hidden state slides sidebar off-screen */
     .sidebar.hidden { transform: translateX(-100%); }
+
+    /* Overlay background when mobile menu is open */
+    .overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background-color: rgba(0,0,0,0.4); z-index:40;
+        opacity:0; visibility:hidden; transition: opacity 0.3s ease;
+    }
+    .overlay.show { opacity:1; visibility:visible; }
 
     .main-content { margin-left: 280px; padding: 24px; min-height: 100vh; transition: margin-left 0.3s ease; }
     .main-content.full { margin-left: 0; }
@@ -33,11 +43,11 @@
 <!-- Mobile Menu Toggle -->
 <button id="sidebar-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-green-600 text-white px-4 py-2 rounded-md">☰ Menu</button>
 
+<!-- Sidebar -->
 <aside class="sidebar hidden lg:block">
     <div class="p-8">
         <h1 class="text-2xl font-black text-green-800 tracking-tighter">Y-FLEX MO</h1>
     </div>
-
     <nav class="flex-grow">
         <a href="dashboard.html" class="nav-item">
             <span class="mr-3">🏠</span> Dashboard
@@ -52,7 +62,6 @@
             <span class="mr-3">🏆</span> Rewards
         </a>
     </nav>
-
     <div class="p-6 border-t border-green-50">
         <a href="#" class="nav-item text-red-500 hover:bg-red-50">
             <span class="mr-3">🚪</span> Logout
@@ -60,6 +69,10 @@
     </div>
 </aside>
 
+<!-- Overlay for mobile -->
+<div id="overlay" class="overlay lg:hidden"></div>
+
+<!-- Main Content -->
 <main class="main-content w-full lg:ml-[280px] p-6 md:p-10 min-h-screen transition-all">
     <header class="mb-12">
         <h1 class="text-4xl font-extrabold text-green-900 tracking-tight">Yoga Journey</h1>
@@ -104,22 +117,26 @@
 </main>
 
 <script>
-    // Sidebar toggle
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content');
-    sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('hidden');
-        mainContent.classList.toggle('full');
-        if (!sidebar.classList.contains('hidden')) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    });
+    const overlay = document.getElementById('overlay');
 
+    function openSidebar() {
+        sidebar.classList.remove('hidden');
+        overlay.classList.add('show');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.add('hidden');
+        overlay.classList.remove('show');
+    }
+
+    sidebarToggle.addEventListener('click', openSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Unlock challenges based on localStorage
     window.onload = function() {
-        // Unlock Stage 2 if Challenge 1 is complete
         if (localStorage.getItem('challenge1_complete') === 'true') unlockChallenge('challenge-2', 'challenge2_content.html');
-        // Unlock Stage 3 if Challenge 2 is complete
         if (localStorage.getItem('challenge2_complete') === 'true') unlockChallenge('challenge-3', 'challenge3_content.html');
     };
 
