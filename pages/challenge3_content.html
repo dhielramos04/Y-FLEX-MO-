@@ -16,85 +16,117 @@ body {
   background: black;
 }
 
-/* CAMERA (NO COLOR OVERLAY) */
+/* CAMERA */
 #video {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* GREEN BORDER FRAME */
-.camera-frame {
+/* GREEN FRAME */
+.frame {
   position: fixed;
   top: 10px;
   left: 10px;
   right: 10px;
   bottom: 10px;
-  border: 4px solid #00c853;
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 255, 100, 0.6);
+  border: 4px solid #00e676;
+  border-radius: 25px;
+  box-shadow: 0 0 25px #00e676;
   pointer-events: none;
 }
 
-/* UI OVERLAY (TRANSPARENT) */
-.overlay {
-  position: fixed;
+/* TITLE */
+.title {
+  position: absolute;
+  top: 20px;
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  text-align: center;
   color: white;
-  padding: 20px;
-}
-
-/* TOP INFO */
-.pose-title {
-  text-align: center;
   font-size: 22px;
-  font-weight: bold;
-  color: #a5d6a7;
 }
 
-.countdown {
+.title span {
+  color: #00e676;
+  font-weight: bold;
+}
+
+/* POSE NAME */
+.pose {
+  position: absolute;
+  top: 70px;
+  width: 100%;
   text-align: center;
-  font-size: 50px;
+  color: #a5d6a7;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* COUNTDOWN */
+.countdown {
+  position: absolute;
+  top: 130px;
+  width: 100%;
+  text-align: center;
+  font-size: 80px;
   color: #ffeb3b;
+  font-weight: bold;
+  text-shadow: 0 0 20px rgba(255,255,255,0.7);
 }
 
 /* SIDE BUTTONS */
-.side-controls {
+.side {
   position: absolute;
-  right: 12px;
-  bottom: 120px;
+  right: 15px;
+  top: 35%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
-.control-btn {
-  background: rgba(0,0,0,0.5);
-  padding: 12px;
-  border-radius: 50%;
+/* SCORE */
+.score {
+  background: black;
   color: #00e676;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 20px;
+  text-align: center;
+  box-shadow: 0 0 10px #00e676;
 }
 
-/* BOTTOM BUTTON */
-.bottom-bar {
+/* LOGO BUTTON */
+.logo-btn img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #00e676;
+}
+
+/* TROPHY */
+.trophy {
+  background: black;
+  color: gold;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 22px;
   text-align: center;
 }
 
+/* START BUTTON */
 .start-btn {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
   background: linear-gradient(45deg, #00c853, #64dd17);
-  padding: 15px 35px;
-  border-radius: 30px;
-  font-size: 18px;
-  border: none;
+  padding: 20px 60px;
+  border-radius: 40px;
+  font-size: 24px;
   color: white;
-  box-shadow: 0 0 15px rgba(0,255,100,0.6);
+  border: none;
+  box-shadow: 0 0 25px #00e676;
 }
 </style>
 </head>
@@ -103,32 +135,27 @@ body {
 
 <video id="video" autoplay playsinline muted></video>
 
-<!-- BORDER FRAME -->
-<div class="camera-frame"></div>
+<div class="frame"></div>
 
-<div class="overlay">
-
-  <!-- TOP -->
-  <div>
-    <div id="poseName" class="pose-title">Ready?</div>
-    <div id="countdown" class="countdown"></div>
-  </div>
-
-  <!-- SIDE -->
-  <div class="side-controls">
-    <div class="control-btn" id="scoreDisplay">0</div>
-    <div class="control-btn">
-  <img src="logo.png" alt="App Logo" style="width:30px; height:30px;">
+<div class="title">
+  <span>AI Yoga</span> Pose Challenge
 </div>
-    <div class="control-btn">🏆</div>
+
+<div id="poseName" class="pose">Ready</div>
+<div id="countdown" class="countdown"></div>
+
+<div class="side">
+  <div id="scoreDisplay" class="score">0</div>
+
+  <!-- YOUR LOGO HERE -->
+  <div class="logo-btn">
+   <img src="images/yflexmo-logo.png">
   </div>
 
-  <!-- BOTTOM -->
-  <div class="bottom-bar">
-    <button id="startBtn" class="start-btn">START</button>
-  </div>
-
+  <div class="trophy">🏆</div>
 </div>
+
+<button id="startBtn" class="start-btn">START</button>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -142,7 +169,6 @@ let startBtn = document.getElementById("startBtn");
 let poses = [
   {name: "Mountain Pose"},
   {name: "Tree Pose"},
-  {name: "Downward Dog"},
   {name: "Warrior I"},
   {name: "Warrior II"}
 ];
@@ -171,6 +197,7 @@ function startPose() {
   if (index >= poses.length) return finish();
 
   poseName.innerText = poses[index].name;
+
   let prep = 3;
   countdownDisplay.innerText = prep;
 
@@ -213,13 +240,11 @@ function finish() {
   countdownDisplay.innerText = avg;
 
   confetti();
-
-  setTimeout(() => {
-    alert("Final Score: " + avg);
-    location.reload();
-  }, 2000);
 }
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
