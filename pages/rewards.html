@@ -6,186 +6,219 @@
 <title>Yoga Mastery - Your Rewards</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #166534; }
+body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #166534; }
 
-    /* Sidebar */
-    .sidebar { 
-        width: 280px; height: 100vh; position: fixed; left: 0; top: 0; 
-        background-color: #ffffff; border-right: 1px solid #dcfce7; display: flex; flex-direction: column;
-        transition: transform 0.3s ease; z-index:40;
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: white;
+    border-right: 1px solid #dcfce7;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 50;
+}
+
+/* Desktop sidebar always visible */
+@media (min-width: 1024px) {
+    .sidebar {
+        transform: translateX(0);
     }
-    .sidebar.hidden { transform: translateX(-100%); }
+}
 
-    .main-content { margin-left: 280px; padding: 40px; min-height: 100vh; transition: margin-left 0.3s ease; }
-    .main-content.full { margin-left: 0; }
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 40;
+}
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
 
-    .nav-item {
-        display: flex; align-items: center; padding: 12px 24px;
-        margin: 4px 16px; border-radius: 12px; color: #4b5563;
-        font-weight: 600; transition: all 0.2s;
+/* Main */
+.main-content {
+    margin-left: 0;
+    padding: 24px;
+    transition: margin-left 0.3s;
+}
+@media (min-width: 1024px) {
+    .main-content {
+        margin-left: 280px;
+        padding: 40px;
     }
-    .nav-item:hover { background-color: #f0fdf4; color: #166534; }
-    .nav-item.active { background-color: #dcfce7; color: #15803d; }
+}
 
-    .reward-card { background: white; border: 1px solid #dcfce7; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
-    .reward-card.unlocked:hover { transform: scale(1.05); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-    .locked-badge { filter: grayscale(1); opacity: 0.4; position: relative; }
-    .lock-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; }
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    margin: 4px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #4b5563;
+}
+.nav-item:hover { background:#f0fdf4; color:#166534; }
+.nav-item.active { background:#dcfce7; color:#15803d; }
 
-    @media (max-width: 1024px) {
-        .sidebar { transform: translateX(-100%); }
-        .main-content { margin-left: 0; }
-    }
+/* Cards */
+.reward-card { border:1px solid #dcfce7; background:white; transition:0.3s; }
+.reward-card.unlocked:hover { transform: scale(1.05); }
+
+.locked-badge { filter: grayscale(1); opacity: 0.5; position: relative; }
+.lock-icon {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
 </style>
 </head>
+
 <body>
 
-<!-- Mobile Menu Toggle -->
-<button id="sidebar-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-green-600 text-white px-4 py-2 rounded-md">☰ Menu</button>
+<!-- Toggle -->
+<button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-50 bg-green-600 text-white px-4 py-2 rounded-md">
+☰ Menu
+</button>
 
-<aside class="sidebar hidden lg:block">
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar">
     <div class="p-8">
-        <h1 class="text-2xl font-black text-green-800 tracking-tighter">Y-FLEX MO</h1>
+        <h1 class="text-2xl font-black text-green-800">Y-FLEX MO</h1>
     </div>
 
     <nav class="flex-grow">
-        <a href="dashboard.html" class="nav-item">
-            <span class="mr-3">🏠</span> Dashboard
-        </a>
-        <a href="challenges_list.html" class="nav-item">
-            <span class="mr-3">📜</span> Challenges
-        </a>
-        <a href="myprogress.html" class="nav-item">
-            <span class="mr-3">📊</span> My Progress
-        </a>
-        <a href="rewards.html" class="nav-item active">
-            <span class="mr-3">🏆</span> Rewards
-        </a>
+        <a href="dashboard.html" class="nav-item">🏠 Dashboard</a>
+        <a href="challenges_list.html" class="nav-item">📜 Challenges</a>
+        <a href="myprogress.html" class="nav-item">📊 My Progress</a>
+        <a href="rewards.html" class="nav-item active">🏆 Rewards</a>
     </nav>
 
-    <div class="p-6 border-t border-green-50">
-        <a href="#" class="nav-item text-red-500 hover:bg-red-50">
-            <span class="mr-3">🚪</span> Logout
-        </a>
+    <div class="p-6 border-t">
+        <a href="#" class="nav-item text-red-500">🚪 Logout</a>
     </div>
 </aside>
 
+<!-- Overlay -->
+<div id="overlay" class="overlay"></div>
+
+<!-- Main -->
 <main class="main-content">
-    <header class="mb-12">
-        <h1 class="text-4xl font-black text-green-900 tracking-tight">Trophy Room</h1>
-        <p class="text-green-700 text-lg mt-2 font-medium">Your achievements and earned badges.</p>
-    </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-gradient-to-br from-green-500 to-green-600 p-6 rounded-3xl text-white shadow-lg">
-            <p class="text-green-100 font-bold uppercase text-xs">Current Balance</p>
-            <h3 class="text-3xl font-black mt-1"><span id="points-display">100</span> YP</h3>
-        </div>
-        <div class="bg-white p-6 rounded-3xl border border-green-200 shadow-sm">
-            <p class="text-gray-500 font-bold uppercase text-xs">Badges Collected</p>
-            <h3 class="text-3xl font-black text-green-800 mt-1"><span id="badges-display">0</span>/3</h3>
-        </div>
-        <div class="bg-white p-6 rounded-3xl border border-green-200 shadow-sm">
-            <p class="text-gray-500 font-bold uppercase text-xs">Rank</p>
-            <h3 class="text-3xl font-black text-orange-500 mt-1">Novice</h3>
-        </div>
+<header class="mb-10">
+    <h1 class="text-3xl sm:text-4xl font-black text-green-900">Trophy Room</h1>
+    <p class="text-green-700 mt-2">Your achievements and earned badges.</p>
+</header>
+
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+
+    <div class="bg-green-600 text-white p-6 rounded-3xl">
+        <p class="text-xs uppercase">Current Balance</p>
+        <h3 class="text-3xl font-black"><span id="points">0</span> YP</h3>
     </div>
 
-    <section class="mb-16">
-        <h2 class="text-2xl font-black text-green-900 mb-8 flex items-center">
-            <span class="mr-3">🏅</span> Earned Badges
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div id="badge-history" class="reward-card locked-badge p-6 rounded-3xl text-center border-2 border-dashed border-green-200">
-                <div class="text-5xl mb-4">📜</div>
-                <h3 class="font-bold text-green-900">History Buff</h3>
-                <p class="text-xs text-gray-500 mt-2">Complete Stage 1</p>
-                <div class="lock-icon">🔒</div>
-            </div>
-
-            <div id="badge-pose" class="reward-card locked-badge p-6 rounded-3xl text-center border-2 border-dashed border-green-200">
-                <div class="text-5xl mb-4">🧘‍♀️</div>
-                <h3 class="font-bold text-green-900">Pose Master</h3>
-                <p class="text-xs text-gray-500 mt-2">Complete Stage 2</p>
-                <div class="lock-icon">🔒</div>
-            </div>
-
-            <div id="badge-zen" class="reward-card locked-badge p-6 rounded-3xl text-center border-2 border-dashed border-green-200">
-                <div class="text-5xl mb-4">🏆</div>
-                <h3 class="font-bold text-green-900">Zen Warrior</h3>
-                <p class="text-xs text-gray-500 mt-2">Complete Stage 3</p>
-                <div class="lock-icon">🔒</div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <h2 class="text-2xl font-black text-green-900 mb-8 flex items-center">
-            <span class="mr-3">🎁</span> Point Shop
-        </h2>
-        <div class="bg-white p-8 rounded-3xl border border-green-200 text-center">
-            <div class="inline-block p-4 bg-green-50 rounded-full mb-4">
-                <span class="text-3xl">🏗️</span>
-            </div>
-            <h3 class="text-xl font-bold text-green-800">Shop Coming Soon!</h3>
-            <p class="text-gray-600 max-w-sm mx-auto mt-2">You will soon be able to spend your YP on custom avatars and profile themes.</p>
-        </div>
-    </section>
-
-    <div class="mt-12">
-        <a href="dashboard.html" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700">← Back to Dashboard</a>
+    <div class="bg-white p-6 rounded-3xl border">
+        <p class="text-xs text-gray-500 uppercase">Badges</p>
+        <h3 class="text-3xl font-black text-green-800"><span id="badges">0</span>/3</h3>
     </div>
+
+    <div class="bg-white p-6 rounded-3xl border">
+        <p class="text-xs text-gray-500 uppercase">Rank</p>
+        <h3 id="rank" class="text-3xl font-black text-orange-500">Novice</h3>
+    </div>
+
+</div>
+
+<!-- Badges -->
+<section class="mb-12">
+<h2 class="text-xl font-black mb-6">🏅 Earned Badges</h2>
+
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+
+<div id="b1" class="reward-card locked-badge p-5 rounded-3xl text-center">
+    <div class="text-4xl">📜</div>
+    <p class="text-xs mt-2">Stage 1</p>
+    <div class="lock-icon">🔒</div>
+</div>
+
+<div id="b2" class="reward-card locked-badge p-5 rounded-3xl text-center">
+    <div class="text-4xl">🧘</div>
+    <p class="text-xs mt-2">Stage 2</p>
+    <div class="lock-icon">🔒</div>
+</div>
+
+<div id="b3" class="reward-card locked-badge p-5 rounded-3xl text-center">
+    <div class="text-4xl">🏆</div>
+    <p class="text-xs mt-2">Stage 3</p>
+    <div class="lock-icon">🔒</div>
+</div>
+
+</div>
+</section>
+
 </main>
 
 <script>
-    // Sidebar toggle for mobile
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content');
-    sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('hidden');
-        mainContent.classList.toggle('full');
-    });
+const sidebar = document.getElementById("sidebar");
+const btn = document.getElementById("menu-btn");
+const overlay = document.getElementById("overlay");
 
-    window.onload = function() {
-        const s1Points = parseInt(localStorage.getItem('challenge1_points')) || 0;
-        const s2Points = parseInt(localStorage.getItem('challenge2_points')) || 0;
-        const s3Points = parseInt(localStorage.getItem('challenge3_points')) || 0;
-        const totalPoints = s1Points + s2Points + s3Points;
+btn.onclick = () => {
+    sidebar.style.transform = "translateX(0)";
+    overlay.classList.add("show");
+};
 
-        const s1Complete = localStorage.getItem('challenge1_complete') === 'true';
-        const s2Complete = localStorage.getItem('challenge2_complete') === 'true';
-        const s3Complete = localStorage.getItem('challenge3_complete') === 'true';
+overlay.onclick = () => {
+    sidebar.style.transform = "translateX(-100%)";
+    overlay.classList.remove("show");
+};
 
-        let badgeCount = 0;
-        if (s1Complete) badgeCount++;
-        if (s2Complete) badgeCount++;
-        if (s3Complete) badgeCount++;
+// Load Data
+window.onload = () => {
+    let p1 = +localStorage.getItem("challenge1_points") || 0;
+    let p2 = +localStorage.getItem("challenge2_points") || 0;
+    let p3 = +localStorage.getItem("challenge3_points") || 0;
 
-        document.getElementById('points-display').innerText = totalPoints;
-        document.getElementById('badges-display').innerText = badgeCount;
+    let total = p1+p2+p3;
 
-        const rankDisplay = document.querySelector('h3.text-orange-500');
-        if (totalPoints >= 800) rankDisplay.innerText = "Master";
-        else if (totalPoints >= 400) rankDisplay.innerText = "Intermediate";
-        else rankDisplay.innerText = "Novice";
+    document.getElementById("points").innerText = total;
 
-        function unlockUI(elementId) {
-            const card = document.getElementById(elementId);
-            card.classList.remove('locked-badge', 'border-dashed');
-            card.classList.add('unlocked', 'border-solid', 'bg-white', 'shadow-sm', 'border-green-500');
-            card.querySelector('.lock-icon').style.display = 'none';
-            const statusText = card.querySelector('p');
-            statusText.innerText = "Unlocked!";
-            statusText.classList.replace('text-gray-500', 'text-green-600');
-            statusText.classList.add('font-bold');
-        }
+    let done1 = localStorage.getItem("challenge1_complete")==="true";
+    let done2 = localStorage.getItem("challenge2_complete")==="true";
+    let done3 = localStorage.getItem("challenge3_complete")==="true";
 
-        if (s1Complete) unlockUI('badge-history');
-        if (s2Complete) unlockUI('badge-pose');
-        if (s3Complete) unlockUI('badge-zen');
-    };
+    let count = [done1,done2,done3].filter(Boolean).length;
+    document.getElementById("badges").innerText = count;
+
+    if(total>=800) document.getElementById("rank").innerText="Master";
+    else if(total>=400) document.getElementById("rank").innerText="Intermediate";
+
+    function unlock(id){
+        let el=document.getElementById(id);
+        el.classList.remove("locked-badge");
+        el.querySelector(".lock-icon").style.display="none";
+    }
+
+    if(done1) unlock("b1");
+    if(done2) unlock("b2");
+    if(done3) unlock("b3");
+};
 </script>
+
 </body>
 </html>
