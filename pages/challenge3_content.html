@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yoga Challenge</title>
-
+<title>Challenge 3: Be A Yoga Master</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -78,11 +78,10 @@ body {
 .side {
   position: absolute;
   right: 15px;
-  top: 15%;
+  top: 35%;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  z-index: 90; /* behind floating logo */
 }
 
 /* SCORE */
@@ -94,6 +93,14 @@ body {
   font-size: 20px;
   text-align: center;
   box-shadow: 0 0 10px #00e676;
+}
+
+/* LOGO BUTTON */
+.logo-btn img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #00e676;
 }
 
 /* TROPHY */
@@ -119,84 +126,29 @@ body {
   color: white;
   border: none;
   box-shadow: 0 0 25px #00e676;
-  z-index: 80;
-}
-
-/* FLOATING LOGO */
-.logo-btn {
-  position: fixed;
-  right: 20px;
-  bottom: 120px;
-  z-index: 100; /* above everything */
-  cursor: pointer;
-}
-
-.logo-btn img.logo-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  box-shadow: 0 0 15px #00e676;
-  transition: transform 0.2s;
-}
-
-.logo-btn img.logo-image:hover {
-  transform: scale(1.1);
-}
-
-/* TOTAL SCORE ANIMATION */
-.total-score {
-  color: #00e676;
-  font-size: 48px;
-  font-weight: bold;
-  text-align: center;
-  text-shadow: 0 0 10px #00e676, 0 0 20px #00e676, 0 0 30px #00e676;
-  opacity: 0;
-  animation: bounceFade 1s forwards;
-}
-
-@keyframes bounceFade {
-  0% { transform: translateY(-50px) scale(0.5); opacity: 0; }
-  50% { transform: translateY(10px) scale(1.2); opacity: 1; }
-  70% { transform: translateY(-5px) scale(1); }
-  100% { transform: translateY(0) scale(1); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Camera -->
 <video id="video" autoplay playsinline muted></video>
-
-<!-- Green Frame -->
 <div class="frame"></div>
 
-<!-- Title -->
-<div class="title">
-  <span>AI Yoga</span> Pose Challenge
-</div>
-
-<!-- Pose Name -->
+<div class="title"><span>AI Yoga</span> Pose Challenge</div>
 <div id="poseName" class="pose">Ready</div>
-
-<!-- Countdown -->
 <div id="countdown" class="countdown"></div>
 
-<!-- Side Buttons: Score and Trophy -->
 <div class="side">
   <div id="scoreDisplay" class="score">0</div>
+  <div class="logo-btn">
+    <img src="assets/image/logo.png" alt="Y-FLEX-MO Logo" class="logo-image">
+  </div>
   <div class="trophy">🏆</div>
 </div>
 
-<!-- Floating Logo -->
-<div class="logo-btn">
-  <img src="assets/image/logo.png" alt="Y-FLEX-MO Logo" class="logo-image">
-</div>
-
-<!-- Start Button -->
 <button id="startBtn" class="start-btn">START</button>
 
-<!-- Confetti Script -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
@@ -254,11 +206,14 @@ function startPose() {
 
 function holdPose() {
   let time = 5;
-  let score = 60;
+  let score = 0;
 
   let timer = setInterval(() => {
     time--;
-    score += Math.random() * 5;
+
+    // Simulate pose accuracy (replace with real AI detection)
+    let accuracy = Math.random() * 20 + 80; // 80-100%
+    score += accuracy / 5;
     if (score > 100) score = 100;
 
     countdownDisplay.innerText = time;
@@ -278,16 +233,20 @@ function finish() {
 
   poseName.innerText = "Completed!";
 
-  // Launch confetti
-  confetti({
-    particleCount: 150,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+  // Confetti animation
+  confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-  // Show bouncing glowing total score after 2 seconds
+  // Transmute raw game score (0–100) into dashboard points (0–50)
+  let dashboardPoints = Math.round((avg / 100) * 50);
+
+  // Save for dashboard
+  localStorage.setItem('challenge3_score', avg);          // raw performance score
+  localStorage.setItem('challenge3_points', dashboardPoints); // transmuted points
+  localStorage.setItem('challenge3_complete', 'true');    // stage completed
+
+  // Show player's actual score after confetti
   setTimeout(() => {
-    countdownDisplay.innerHTML = `<span class="total-score">Total Score: ${avg}</span>`;
+    countdownDisplay.innerHTML = `<span class="total-score">Your Score: ${avg}</span>`;
   }, 2000);
 }
 </script>
