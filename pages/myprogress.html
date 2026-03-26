@@ -13,15 +13,20 @@
     .sidebar { 
         width: 280px; height: 100vh; position: fixed; left: 0; top: 0; 
         background-color: #ffffff; border-right: 1px solid #dcfce7; 
-        display: flex; flex-direction: column; transition: transform 0.3s ease; z-index:40;
+        display: flex; flex-direction: column; transition: transform 0.3s ease; z-index:50;
     }
-    .sidebar.show { transform: translateX(0); }
-    @media (max-width: 1024px) { 
-        .sidebar { transform: translateX(-100%); } 
-    }
+    .sidebar.hidden { transform: translateX(-100%); }
 
-    .main-content { margin-left: 280px; padding: 40px; min-height: 100vh; transition: margin-left 0.3s ease; }
-    @media (max-width: 1024px) { .main-content.full-width { margin-left:0; } }
+    /* Overlay */
+    .overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background-color: rgba(0,0,0,0.4); z-index:40;
+        opacity:0; visibility:hidden; transition: opacity 0.3s ease;
+    }
+    .overlay.show { opacity:1; visibility:visible; }
+
+    .main-content { margin-left: 280px; padding: 24px; min-height: 100vh; transition: margin-left 0.3s ease; }
+    .main-content.full-width { margin-left:0; }
 
     .nav-item {
         display: flex; align-items: center; padding: 12px 24px;
@@ -47,7 +52,7 @@
 <button id="sidebar-toggle" class="lg:hidden">☰ Menu</button>
 
 <!-- Sidebar -->
-<aside class="sidebar">
+<aside class="sidebar hidden lg:block">
     <div class="p-8">
         <h1 class="text-2xl font-black text-green-800 tracking-tighter">Y-FLEX MO</h1>
     </div>
@@ -74,35 +79,38 @@
     </div>
 </aside>
 
+<!-- Overlay -->
+<div id="overlay" class="overlay lg:hidden"></div>
+
 <!-- Main Content -->
-<main class="main-content">
+<main class="main-content w-full lg:ml-[280px] p-6 md:p-10 min-h-screen transition-all">
     <header class="mb-12">
         <h1 class="text-4xl font-black text-green-900 tracking-tight">Performance Tracking</h1>
         <p class="text-green-700 text-lg mt-2 font-medium">Analyze your learning milestones and activity.</p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Course Completion -->
-        <div class="lg:col-span-1 bg-white p-8 rounded-3xl border border-green-200 shadow-sm flex flex-col items-center justify-center">
+        <div class="lg:col-span-1 bg-white p-6 sm:p-8 rounded-3xl border border-green-200 shadow-sm flex flex-col items-center justify-center">
             <h3 class="text-lg font-bold text-green-800 mb-6">Course Completion</h3>
-            <div class="relative w-48 h-48">
+            <div class="relative w-48 h-48 sm:w-56 sm:h-56">
                 <svg class="w-full h-full">
                     <circle cx="96" cy="96" r="88" stroke="#f0fdf4" stroke-width="12" fill="transparent" />
                     <circle id="progress-ring" cx="96" cy="96" r="88" stroke="#16a34a" stroke-width="12" fill="transparent" 
                         stroke-dasharray="552.92" stroke-dashoffset="552.92" class="progress-circle" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span id="percent-text" class="text-4xl font-black text-green-900">0%</span>
-                    <span class="text-[10px] font-bold text-green-600 uppercase">Finished</span>
+                    <span id="percent-text" class="text-4xl sm:text-5xl font-black text-green-900">0%</span>
+                    <span class="text-[10px] sm:text-xs font-bold text-green-600 uppercase">Finished</span>
                 </div>
             </div>
             <p class="mt-6 text-sm text-gray-500 font-medium text-center">Complete all 3 stages to reach 100% Mastery.</p>
         </div>
 
         <!-- Objective Checklist -->
-        <div class="lg:col-span-2 bg-white p-8 rounded-3xl border border-green-200 shadow-sm">
+        <div class="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-green-200 shadow-sm">
             <h3 class="text-lg font-bold text-green-800 mb-6">Objective Checklist</h3>
-            <div class="space-y-6">
+            <div class="space-y-4 sm:space-y-6">
                 <div id="obj-1-container" class="flex items-center p-4 rounded-2xl bg-gray-50 border border-gray-100 opacity-60 transition-all duration-500">
                     <div id="obj-1-check" class="w-6 h-6 rounded-full border-2 border-green-300 mr-4 flex items-center justify-center text-xs text-white"></div>
                     <div class="flex-grow">
@@ -133,7 +141,7 @@
         </div>
 
         <!-- XP Gain History -->
-        <div class="lg:col-span-3 bg-white p-8 rounded-3xl border border-green-200 shadow-sm">
+        <div class="lg:col-span-3 bg-white p-6 sm:p-8 rounded-3xl border border-green-200 shadow-sm mt-6">
             <h3 class="text-lg font-bold text-green-800 mb-6">XP Gain History</h3>
             <div class="flex items-end justify-between h-40 px-4">
                 <div class="w-12 bg-green-100 rounded-t-lg h-1/4"></div>
@@ -144,7 +152,7 @@
                 <div class="w-12 bg-gray-100 rounded-t-lg h-5"></div>
                 <div class="w-12 bg-gray-100 rounded-t-lg h-5"></div>
             </div>
-            <div class="flex justify-between mt-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">
+            <div class="flex justify-between mt-4 text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest px-2">
                 <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
             </div>
         </div>
@@ -153,6 +161,26 @@
 </main>
 
 <script>
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const sidebar = document.querySelector('.sidebar');
+const overlay = document.createElement('div');
+overlay.id = "overlay";
+overlay.className = "overlay lg:hidden";
+document.body.appendChild(overlay);
+
+function openSidebar() {
+    sidebar.classList.remove('hidden');
+    overlay.classList.add('show');
+}
+
+function closeSidebar() {
+    sidebar.classList.add('hidden');
+    overlay.classList.remove('show');
+}
+
+sidebarToggle.addEventListener('click', openSidebar);
+overlay.addEventListener('click', closeSidebar);
+
 window.onload = function() {
     const s1Done = localStorage.getItem('challenge1_complete') === 'true';
     const s2Done = localStorage.getItem('challenge2_complete') === 'true';
@@ -198,16 +226,6 @@ function updateChecklist(stageNum, isDone) {
         container.querySelector('p.font-bold').classList.replace('text-gray-700', 'text-green-900');
     }
 }
-
-// Sidebar toggle
-const sidebarToggle = document.getElementById('sidebar-toggle');
-const sidebar = document.querySelector('.sidebar');
-const mainContent = document.querySelector('.main-content');
-
-sidebarToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('show');
-    mainContent.classList.toggle('full-width');
-});
 </script>
 
 </body>
